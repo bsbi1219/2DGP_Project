@@ -1,4 +1,5 @@
 from pico2d import *
+from hero import Hero
 
 def handle_events():
     global running
@@ -9,6 +10,8 @@ def handle_events():
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 running = False
+
+running = True
 
 open_canvas()
 while running:
