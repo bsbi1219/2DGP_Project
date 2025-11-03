@@ -21,7 +21,7 @@ def init():
     running = True
 
     hero = Hero()
-    game_world.add_object(hero, 0)
+    game_world.add_object(hero, 1)
 
 
 def update():
