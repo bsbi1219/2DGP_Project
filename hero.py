@@ -49,6 +49,7 @@ FRAMES_PER_ACTION = 8
 class Idle:
     def __init__(self, hero):
         self.hero = hero
+        self.height = 64 * 3
 
     def enter(self, e):
         self.hero.wait_time = get_time()
@@ -62,13 +63,13 @@ class Idle:
 
     def draw(self):
         if self.hero.face_dir == 1: # right
-            self.hero.image.clip_draw(int(self.hero.frame) * 64, 300, 64, 64, self.hero.x, self.hero.y)
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y)
         elif self.hero.face_dir == 2: # left
-            self.hero.image.clip_draw(int(self.hero.frame) * 64, 200, 64, 64, self.hero.x, self.hero.y)
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y)
         elif self.hero.face_dir == 3: # up
-            self.hero.image.clip_draw(int(self.hero.frame) * 64, 200, 64, 64, self.hero.x, self.hero.y)
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y)
         elif self.hero.face_dir == 4: # down
-            self.hero.image.clip_draw(int(self.hero.frame) * 64, 200, 64, 64, self.hero.x, self.hero.y)
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y)
 
 
 class Hero:
