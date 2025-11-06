@@ -1,12 +1,8 @@
-from pico2d import *
-from play_mode import *
+from pico2d import open_canvas, delay, close_canvas
+import game_framework
 
-open_canvas()
-init()
-while running:
-    handle_events()
-    update()
-    draw()
-    delay(0.01)
-finish()
+import play_mode as start_mode
+
+open_canvas(1600, 600)
+game_framework.run(start_mode)
 close_canvas()
