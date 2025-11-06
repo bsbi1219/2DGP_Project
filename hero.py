@@ -42,7 +42,7 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-TIME_PER_ACTION = 0.5
+TIME_PER_ACTION = 2.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
@@ -63,26 +63,29 @@ class Idle:
 
     def draw(self):
         if self.hero.face_dir == 1: # right
-            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y)
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
         elif self.hero.face_dir == 2: # left
-            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y)
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
         elif self.hero.face_dir == 3: # up
-            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y)
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
         elif self.hero.face_dir == 4: # down
-            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y)
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
 
 
 class Hero:
     def __init__(self):
         self.x = 400
         self.y = 300
+        self.frame = 0
         self.face_dir = 1
         self.dir = 0
         self.image = load_image('Assets/hero/hero_idle.png')
 
         self.IDLE = Idle(self)
 
-        self.state_machine = StateMachine(self.IDLE,{ })
+        self.state_machine = StateMachine(self.IDLE,{
+            self.IDLE: {}
+        })
 
     def update(self):
         self.state_machine.update()
