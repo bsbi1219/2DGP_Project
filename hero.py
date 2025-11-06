@@ -77,7 +77,9 @@ class Hero:
         self.x = 400
         self.y = 300
         self.face_dir = 1
+        self.dir = 0
         self.image = load_image('Assets/hero/hero_idle.png')
+
         self.IDLE = Idle(self)
 
         self.state_machine = StateMachine(self.IDLE,{ })
@@ -91,3 +93,13 @@ class Hero:
 
     def draw(self):
         self.state_machine.draw()
+        draw_rectangle(*self.get_bb())
+
+    def get_bb(self):
+        return self.x - 32, self.y - 32, self.x + 32, self.y + 32
+
+    def draw(self):
+        self.state_machine.draw()
+
+    def handle_collision(self, group, other):
+        pass
