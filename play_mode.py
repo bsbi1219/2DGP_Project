@@ -1,24 +1,24 @@
 from pico2d import *
-from hero import Hero
+
+import game_framework
 import game_world
 
-running = True
+from hero import Hero
+
+hero = None
 
 def handle_events():
-    global running
-    events = get_events()
-    for event in events:
+    event_list = get_events()
+    for event in event_list:
         if event.type == SDL_QUIT:
-            running = False
-        elif event.type == SDL_KEYDOWN:
-            if event.key == SDLK_ESCAPE:
-                running = False
+            game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            game_framework.quit()
+        else:
+            hero.handle_event(event)
 
 def init():
     global hero
-    global running
-
-    running = True
 
     hero = Hero()
     game_world.add_object(hero, 1)
@@ -26,7 +26,7 @@ def init():
 
 def update():
     game_world.update()
-
+    game_world.handle_collisions()
 
 def draw():
     clear_canvas()
@@ -36,3 +36,6 @@ def draw():
 
 def finish():
     pass
+
+def pause(): pass
+def resume(): pass
