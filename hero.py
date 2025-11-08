@@ -60,6 +60,9 @@ class Attack:
         self.elapsed += ft
         self.hero.frame = (self.hero.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * ft) % 6
 
+        self.hero.x += self.hero.vx * RUN_SPEED_PPS * ft
+        self.hero.y += self.hero.vy * RUN_SPEED_PPS * ft
+
         if self.elapsed >= self.duration:
             self.exit(None)
             moving = (self.hero.vx != 0 or self.hero.vy != 0)
@@ -211,7 +214,7 @@ class Hero:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.x - 32, self.y - 32, self.x + 32, self.y + 32
+        return self.x - 25, self.y - 32, self.x + 25, self.y + 32
 
     def handle_collision(self, group, other):
         pass
