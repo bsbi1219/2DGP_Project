@@ -4,6 +4,7 @@ import game_framework
 import game_world
 
 from hero import Hero
+from map import Map
 
 hero = None
 
@@ -22,6 +23,9 @@ def init():
 
     hero = Hero()
     game_world.add_object(hero, 1)
+
+    map = Map()
+    game_world.add_object(map, 0)
 
 
 def update():
