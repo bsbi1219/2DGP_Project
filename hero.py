@@ -46,6 +46,41 @@ TIME_PER_ACTION = 2.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
+class Move:
+    def __init__(self, hero):
+        self.hero = hero
+        self.height = 64 * 3
+
+    def enter(self, e):
+        if right_down(e):
+            self.hero.dir = self.hero.face_dir = 1
+        elif left_down(e):
+            self.hero.dir = self.hero.face_dir = 2
+        elif up_down(e):
+            self.hero.dir = self.hero.face_dir = 3
+        elif down_down(e):
+            self.hero.dir = self.hero.face_dir = 4
+
+    def exit(self, e):
+        pass
+
+    def do(self):
+        self.hero.frame = (self.hero.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
+        if self.hero.dir == 1 or self.hero.dir == 2:
+            self.hero.x += self.hero.dir * RUN_SPEED_PPS * game_framework.frame_time
+        elif self.hero.dir == 3 or self.hero.dir == 4:
+            self.hero.y += (self.hero.dir - 2) * RUN_SPEED_PPS * game_framework.frame_time
+
+    def draw(self):
+        if self.hero.face_dir == 1: # right
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
+        elif self.hero.face_dir == 2: # left
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
+        elif self.hero.face_dir == 3: # up
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
+        elif self.hero.face_dir == 4: # down
+            self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
+
 class Idle:
     def __init__(self, hero):
         self.hero = hero
@@ -84,7 +119,7 @@ class Hero:
         self.IDLE = Idle(self)
 
         self.state_machine = StateMachine(self.IDLE,{
-            self.IDLE: {}
+            self.IDLE: { right_down: Move(self), left_down: Move(self), up_down: Move(self), down_down: Move(self) }
         })
 
     def update(self):
