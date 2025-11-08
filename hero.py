@@ -115,7 +115,7 @@ class Hero:
 
         self.state_machine = StateMachine(self.IDLE,{
             self.IDLE: { right_down: self.MOVE, left_down: self.MOVE, up_down: self.MOVE, down_down: self.MOVE },
-            self.MOVE: { right_up: self.IDLE, left_up: self.IDLE, up_up: self.IDLE, down_up: self.IDLE }
+            self.MOVE: { right_up: self.IDLE, left_up: self.IDLE, up_up: self.IDLE, down_up: self.IDLE, right_down : self.MOVE, left_down: self.MOVE, up_down: self.MOVE, down_down: self.MOVE }
         })
 
     def update(self):
@@ -123,7 +123,6 @@ class Hero:
 
     def handle_event(self, event):
         self.state_machine.handle_state_event(('INPUT', event))
-        pass
 
     def draw(self):
         self.state_machine.draw()
