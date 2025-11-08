@@ -80,7 +80,7 @@ class Attack:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.walk_attack_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
+        self.hero.walk_attack_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 32, 32)
 
 class Move:
     def __init__(self, hero):
@@ -109,7 +109,7 @@ class Move:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.walk_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
+        self.hero.walk_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 32, 32)
 
 class Idle:
     def __init__(self, hero):
@@ -137,7 +137,7 @@ class Idle:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
+        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 32, 32)
 
 class Hero:
     def __init__(self):
