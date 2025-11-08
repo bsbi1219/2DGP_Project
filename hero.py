@@ -36,15 +36,32 @@ def down_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 
 
-PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+PIXEL_PER_METER = (10.0 / 0.2)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-TIME_PER_ACTION = 2.0
+TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
+
+class Attack:
+    def __init__(self, hero):
+        self.hero = hero
+        self.height = 64 * 3
+
+    def enter(self, e):
+        pass
+
+    def exit(self, e):
+        pass
+
+    def do(self):
+        pass
+
+    def draw(self):
+        pass
 
 class Move:
     def __init__(self, hero):
@@ -78,7 +95,16 @@ class Move:
         self.hero.y += self.hero.vy * RUN_SPEED_PPS * game_framework.frame_time
 
     def draw(self):
-        self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
+        if self.hero.face_dir == 1:
+            self.height = 64 * 1
+        elif self.hero.face_dir == 2:
+            self.height = 64 * 2
+        elif self.hero.face_dir == 3:
+            self.height = 0
+        elif self.hero.face_dir == 4:
+            self.height = 64 * 3
+        self.hero.walk_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
+
 
 class Idle:
     def __init__(self, hero):
@@ -97,7 +123,7 @@ class Idle:
         self.hero.frame = (self.hero.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
 
     def draw(self):
-        self.hero.image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
+        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 200, 200)
 
 
 class Hero:
@@ -108,7 +134,10 @@ class Hero:
         self.face_dir = 1
         self.vx = 0
         self.vy = 0
-        self.image = load_image('Assets/hero/hero_idle.png')
+        self.keys_pressed = set()
+
+        self.idle_image = load_image('Assets/hero/hero_idle.png')
+        self.walk_image = load_image('Assets/hero/hero_walk.png')
 
         self.IDLE = Idle(self)
         self.MOVE = Move(self)
@@ -119,10 +148,47 @@ class Hero:
         })
 
     def update(self):
+        vx = 0
+        vy = 0
+        if SDLK_RIGHT in self.keys_pressed:
+            vx += 1
+        if SDLK_LEFT in self.keys_pressed:
+            vx -= 1
+        if SDLK_UP in self.keys_pressed:
+            vy += 1
+        if SDLK_DOWN in self.keys_pressed:
+            vy -= 1
+
+        self.vx = vx
+        self.vy = vy
+
+        if self.vx > 0:
+            self.face_dir = 1
+        elif self.vx < 0:
+            self.face_dir = 2
+        elif self.vy > 0:
+            self.face_dir = 3
+        elif self.vy < 0:
+            self.face_dir = 4
+
+        cur = self.state_machine.cur_state
+        moving = (self.vx != 0 or self.vy != 0)
+        if moving and cur is self.IDLE:
+            cur.exit(None)
+            self.MOVE.enter(('HOLD', None))
+            self.state_machine.cur_state = self.MOVE
+        elif (not moving) and cur is self.MOVE:
+            cur.exit(None)
+            self.IDLE.enter(('HOLD', None))
+            self.state_machine.cur_state = self.IDLE
+
         self.state_machine.update()
 
     def handle_event(self, event):
-        self.state_machine.handle_state_event(('INPUT', event))
+        if event.type == SDL_KEYDOWN:
+            self.keys_pressed.add(event.key)
+        elif event.type == SDL_KEYUP:
+            self.keys_pressed.discard(event.key)
 
     def draw(self):
         self.state_machine.draw()
