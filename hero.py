@@ -35,6 +35,9 @@ def down_down(e):
 def down_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 
+def a_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
+
 
 PIXEL_PER_METER = (10.0 / 0.2)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
@@ -62,6 +65,7 @@ class Attack:
 
     def draw(self):
         pass
+
 
 class Move:
     def __init__(self, hero):
@@ -141,10 +145,14 @@ class Hero:
 
         self.IDLE = Idle(self)
         self.MOVE = Move(self)
+        self.ATTACK = Attack(self)
 
         self.state_machine = StateMachine(self.IDLE,{
             self.IDLE: { right_down: self.MOVE, left_down: self.MOVE, up_down: self.MOVE, down_down: self.MOVE },
-            self.MOVE: { right_up: self.IDLE, left_up: self.IDLE, up_up: self.IDLE, down_up: self.IDLE, right_down : self.MOVE, left_down: self.MOVE, up_down: self.MOVE, down_down: self.MOVE }
+            self.MOVE: { right_up: self.IDLE, left_up: self.IDLE, up_up: self.IDLE, down_up: self.IDLE,
+                         right_down : self.MOVE, left_down: self.MOVE, up_down: self.MOVE, down_down: self.MOVE,
+                         a_down: self.ATTACK },
+            self.ATTACK: { }
         })
 
     def update(self):
