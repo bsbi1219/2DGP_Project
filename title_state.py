@@ -26,6 +26,13 @@ def init():
         print('bg load failed', e)
         bg = None
 
+def draw_text_with_outline(font, x, y, text, color, outline_color, thickness=2):
+    for dx in (-thickness, 0, thickness):
+        for dy in (-thickness, 0, thickness):
+            if dx != 0 or dy != 0:
+                font.draw(x + dx, y + dy, text, outline_color)
+    font.draw(x, y, text, color)
+
 def handle_events():
     events = get_events()
     for e in events:
@@ -46,8 +53,10 @@ def draw():
         bg.draw(get_canvas_width() // 2, get_canvas_height() // 2)
     sw, sh = get_canvas_width(), get_canvas_height()
     if font:
-        font.draw(sw//2 - 220, sh//2, "Press Enter to Start", (255,255,255))
-        font.draw(sw//2 - 160, sh//2 - 60, "Esc to Quit", (200,200,200))
+        draw_text_with_outline(font, sw // 2 - 290, sh // 2 - 160, "Press Enter to Start", (0, 0, 0), (0, 0, 0), 4)
+        draw_text_with_outline(font, sw//2 - 170, sh//2 - 250, "Esc to Quit", (0, 0, 0), (0, 0, 0), 4)
+        font.draw(sw//2 - 290, sh//2 - 160, "Press Enter to Start", (255,255,255))
+        font.draw(sw//2 - 170, sh//2 - 250, "Esc to Quit", (255,255,255))
     else:
         # 폰트 없으면 텍스트 건너뛰거나 간단한 안내 이미지로 대체
         pass
