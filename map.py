@@ -21,7 +21,7 @@ class Map:
         self.map_1_data = [] # 바닥
         self.map_2_data = [] # 벽
 
-        # 1은 바닥, 2는 벽 왼, 3은 벽 가운데, 4는 벽 오. 5는 양옆 벽
+        # 1은 바닥, 2는 벽 왼, 3은 벽 가운데, 4는 벽 오. 5는 왼벽, 6은 오른벽
         for y in range(height):
             row_floor = []
             row_wall = []
@@ -30,9 +30,9 @@ class Map:
                 wall = 0
                 if x == 0 and y == 0:
                     wall = 2
-                elif x == 0 and y > 0:
+                elif x == 0 and y > 1:
                     wall = 5
-                elif x == width - 1 and y > 0:
+                elif x == width - 1 and y > 1:
                     wall = 5
                 elif x == width - 1 and y == 0:
                     wall = 4
@@ -65,7 +65,7 @@ class Map:
                                                (len(self.map_2_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2 - 16 * 2, 16, 16 * 5)
                 if tile == 5:
                     self.map_image.clip_draw(16 * 2, 16 * 3, self.map_tile_size, self.map_tile_size, x * self.map_tile_size + self.map_tile_size / 2,
-                                               (len(self.map_2_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2 - 16 * 2, 16, 16 * 2)
+                                               (len(self.map_2_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2 - 16, 16, 16)
 
     def update(self):
         pass
