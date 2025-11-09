@@ -1,6 +1,5 @@
 from pico2d import open_canvas, delay, close_canvas
 import game_framework
-from camera import Camera
 
 import play_mode as start_mode
 
