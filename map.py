@@ -1,4 +1,5 @@
 from pico2d import *
+from random import *
 
 class Map:
     def __init__(self):
@@ -43,6 +44,18 @@ class Map:
             self.map_1_data.append(row_floor)
             self.map_2_data.append(row_wall)
 
+        for x in range(30):
+            rand_x = randint(1, width - 2)
+            rand_y = randint(1, height - 2)
+            self.map_1_data[rand_y][rand_x] = 0
+            rand_x = randint(1, width - 2)
+            rand_y = randint(1, height - 2)
+            self.map_1_data[rand_y][rand_x] = -1
+            rand_x = randint(1, width - 2)
+            rand_y = randint(1, height - 2)
+            self.map_1_data[rand_y][rand_x] = -2
+
+
     # 가로 13개 세로 23개 타일
     def draw(self):
         for y in range(len(self.map_1_data)):
@@ -51,6 +64,16 @@ class Map:
                 if tile == 1:
                     self.map_image.clip_draw(16 * 1, 16 * 16, self.map_tile_size, self.map_tile_size, x * self.map_tile_size + self.map_tile_size / 2,
                                                (len(self.map_1_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2, 16, 16)
+                elif tile == 0:
+                    self.map_image.clip_draw(16 * 11, 16 * 0, self.map_tile_size, self.map_tile_size, x * self.map_tile_size + self.map_tile_size / 2,
+                                               (len(self.map_1_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2, 16, 16)
+                elif tile == -1:
+                    self.map_image.clip_draw(16 * 11, 16 * 1, self.map_tile_size, self.map_tile_size, x * self.map_tile_size + self.map_tile_size / 2,
+                                               (len(self.map_1_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2, 16, 16)
+                elif tile == -2:
+                    self.map_image.clip_draw(16 * 12, 16 * 0, self.map_tile_size, self.map_tile_size, x * self.map_tile_size + self.map_tile_size / 2,
+                                               (len(self.map_1_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2, 16, 16)
+
         for y in range(len(self.map_2_data)):
             for x in range(len(self.map_2_data[y])):
                 tile = self.map_2_data[y][x]
