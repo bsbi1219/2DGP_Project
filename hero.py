@@ -215,7 +215,7 @@ class Hero:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.x - 25, self.y - 32, self.x + 25, self.y + 32
+        return self.x - 6, self.y - 8, self.x + 6, self.y + 8
 
     def handle_collision(self, group, other):
         pass
