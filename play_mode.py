@@ -4,7 +4,7 @@ import game_framework
 import game_world
 
 from hero import Hero
-from map import Map
+from map_1 import Map
 
 hero = None
 

@@ -141,8 +141,8 @@ class Idle:
 
 class Hero:
     def __init__(self):
-        self.x = 400
-        self.y = 300
+        self.x = 50
+        self.y = 850
         self.frame = 0
         self.face_dir = 1
         self.vx = 0
