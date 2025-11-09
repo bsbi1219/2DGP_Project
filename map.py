@@ -1,94 +1,84 @@
+import csv
 from pico2d import *
-from random import *
 
+# class Map:
+#     def __init__(self):
+#         self.floor_image = load_image('Assets/dungeon/walls_floor.png')
+#         self.wall_image = load_image('Assets/dungeon/walls_floor.png')
+#         self.tile_size = 16
+#         self.map_1_floor = []
+#         self.map_1_wall = []
+#
+#         with open('csv/맵 1번._바닥.csv', 'r') as f:
+#             reader = csv.reader(f)
+#             for row in reader:
+#                 self.map_1_floor.append([int(x) for x in row])
+#         with (open('csv/맵 1번._벽.csv', 'r') as f):
+#             reader = csv.reader(f)
+#             for row in reader:
+#                 self.map_1_wall.append([int(x) for x in row])
+#
+#     def draw_map(self, height, map_list, map_image):
+#         for y in range(height):
+#             for x in range(len(map_list[y])):
+#                 tile = map_list[y][x]
+#                 if tile == 0: continue
+#                 map_image.clip_draw((tile % 13) * 16, (tile % 23) * 16, 16, 16,
+#                                          x * self.tile_size + self.tile_size / 2,
+#                                          (height - y - 1) * self.tile_size + self.tile_size / 2)
+#
+#     def draw(self):
+#         height_floor = len(self.map_1_floor)
+#         height_wall = len(self.map_1_wall)
+#         self.draw_map(height_floor, self.map_1_floor, self.floor_image)
+#         self.draw_map(height_wall, self.map_1_wall, self.wall_image)
+#
+#     def update(self):
+#          pass
+
+# python
 class Map:
     def __init__(self):
-        self.map_image = load_image('Assets/dungeon/walls_floor.png')
-        self.fire_image = load_image('Assets/dungeon/fire_animation.png')
-        self.objects_image = load_image('Assets/dungeon/Objects.png')
+        from pico2d import load_image
+        import csv
+        self.floor_image = load_image('Assets/dungeon/walls_floor.png')
+        self.wall_image = load_image('Assets/dungeon/walls_floor.png')
+        self.tile_size = 16
+        self.map_1_floor = []
+        self.map_1_wall = []
 
-        self.map_fw = 208
-        self.map_fh = 368
-        self.map_tile_size = 16
+        with open('csv/맵 1번._바닥.csv', 'r') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                self.map_1_floor.append([int(x) for x in row])
+        with open('csv/맵 1번._벽.csv', 'r') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                self.map_1_wall.append([int(x) for x in row])
 
-        self.fire_fw = 176
-        self.fire_fh = 288
-        self.fire_w = 44
-        self.fire_h = 48
-
-        width = 80
-        height = 60
-
-        self.map_1_data = [] # 바닥
-        self.map_2_data = [] # 벽
-
-        # 1은 바닥, 2는 벽 왼, 3은 벽 가운데, 4는 벽 오. 5는 왼벽, 6은 오른벽
+    def draw_map(self, height, map_list, map_image):
+        cols = map_image.w // self.tile_size
+        image_h = map_image.h
         for y in range(height):
-            row_floor = []
-            row_wall = []
-            for x in range(width):
-                floor = 1
-                wall = 0
-                if x == 0 and y == 0:
-                    wall = 2
-                elif x == 0 and y > 1:
-                    wall = 5
-                elif x == width - 1 and y > 1:
-                    wall = 5
-                elif x == width - 1 and y == 0:
-                    wall = 4
-                elif y == 0:
-                    wall = 3
-                row_floor.append(floor)
-                row_wall.append(wall)
-            self.map_1_data.append(row_floor)
-            self.map_2_data.append(row_wall)
+            for x in range(len(map_list[y])):
+                tile = map_list[y][x]
+                # if tile == 0:
+                #     continue
+                idx = tile  # CSV가 1부터 시작하면 -1; 0부터면 이 줄 제거
+                if idx < 0:
+                    continue
+                sx = (idx % cols) * self.tile_size
+                # 타일셋이 위쪽부터 번호인 경우(에디터 기준) 아래 보정:
+                sy = image_h - (idx // cols + 1) * self.tile_size
+                map_image.clip_draw(sx, sy, self.tile_size, self.tile_size,
+                                    x * self.tile_size + self.tile_size / 2,
+                                    (height - y - 1) * self.tile_size + self.tile_size / 2)
 
-        for x in range(30):
-            rand_x = randint(1, width - 2)
-            rand_y = randint(1, height - 2)
-            self.map_1_data[rand_y][rand_x] = 0
-            rand_x = randint(1, width - 2)
-            rand_y = randint(1, height - 2)
-            self.map_1_data[rand_y][rand_x] = -1
-            rand_x = randint(1, width - 2)
-            rand_y = randint(1, height - 2)
-            self.map_1_data[rand_y][rand_x] = -2
-
-
-    # 가로 13개 세로 23개 타일
     def draw(self):
-        for y in range(len(self.map_1_data)):
-            for x in range(len(self.map_1_data[y])):
-                tile = self.map_1_data[y][x]
-                if tile == 1:
-                    self.map_image.clip_draw(16 * 1, 16 * 16, self.map_tile_size, self.map_tile_size, x * self.map_tile_size + self.map_tile_size / 2,
-                                               (len(self.map_1_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2, 16, 16)
-                elif tile == 0:
-                    self.map_image.clip_draw(16 * 11, 16 * 0, self.map_tile_size, self.map_tile_size, x * self.map_tile_size + self.map_tile_size / 2,
-                                               (len(self.map_1_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2, 16, 16)
-                elif tile == -1:
-                    self.map_image.clip_draw(16 * 11, 16 * 1, self.map_tile_size, self.map_tile_size, x * self.map_tile_size + self.map_tile_size / 2,
-                                               (len(self.map_1_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2, 16, 16)
-                elif tile == -2:
-                    self.map_image.clip_draw(16 * 12, 16 * 0, self.map_tile_size, self.map_tile_size, x * self.map_tile_size + self.map_tile_size / 2,
-                                               (len(self.map_1_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2, 16, 16)
-
-        for y in range(len(self.map_2_data)):
-            for x in range(len(self.map_2_data[y])):
-                tile = self.map_2_data[y][x]
-                if tile == 2:
-                    self.map_image.clip_draw(16 * 0, 16 * 18, self.map_tile_size, self.map_tile_size * 5, x * self.map_tile_size + self.map_tile_size / 2,
-                                               (len(self.map_2_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2 - 16 * 2, 16, 16 * 5)
-                if tile == 3:
-                    self.map_image.clip_draw(16 * 1, 16 * 18, self.map_tile_size, self.map_tile_size * 5, x * self.map_tile_size + self.map_tile_size / 2,
-                                               (len(self.map_2_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2 - 16 * 2, 16, 16 * 5)
-                if tile == 4:
-                    self.map_image.clip_draw(16 * 2, 16 * 18, self.map_tile_size, self.map_tile_size * 5, x * self.map_tile_size + self.map_tile_size / 2,
-                                               (len(self.map_2_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2 - 16 * 2, 16, 16 * 5)
-                if tile == 5:
-                    self.map_image.clip_draw(16 * 2, 16 * 3, self.map_tile_size, self.map_tile_size, x * self.map_tile_size + self.map_tile_size / 2,
-                                               (len(self.map_2_data) - y - 1) * self.map_tile_size + self.map_tile_size / 2 - 16, 16, 16)
+        height_floor = len(self.map_1_floor)
+        height_wall = len(self.map_1_wall)
+        self.draw_map(height_floor, self.map_1_floor, self.floor_image)
+        self.draw_map(height_wall, self.map_1_wall, self.wall_image)
 
     def update(self):
         pass
