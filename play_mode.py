@@ -5,6 +5,7 @@ import game_world
 
 from hero import Hero
 from map_1 import Map
+from camera import Camera
 
 hero = None
 
