@@ -28,10 +28,13 @@ def init():
     map = Map()
     game_world.add_object(map, 0)
 
+    cam = Camera(get_canvas_width(), get_canvas_height(), world_w=None, world_h=None, scale=2.0)
+
 
 def update():
     game_world.update()
     game_world.handle_collisions()
+    cam.update(hero.x, hero.y)
 
 def draw():
     clear_canvas()
