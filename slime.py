@@ -27,6 +27,7 @@ class Slime:
 
     def __init__(self):
         self.x, self.y = random.randint(100, 1000), random.randint(100, 900)
+        self.face_dir = 1
         self.load_images()
         self.frame = random.randint(0, 9)
         self.vx = random.choice([-1, 1])
@@ -50,10 +51,17 @@ class Slime:
         pass
 
     def draw(self):
-        if self.vx < 0:
-            pass
-        else:
-            pass
+        cam = game_world.camera
+        sx, sy = cam.world_to_screen(self.x, self.y)
+        if self.face_dir == 1:
+            self.height = 64 * 1
+        elif self.face_dir == 2:
+            self.height = 64 * 2
+        elif self.face_dir == 3:
+            self.height = 0
+        elif self.face_dir == 4:
+            self.height = 64 * 3
+        Slime.images[self.slime_state].clip_draw(int(self.frame) * 64, self.height, 64, 64, sx, sy, 100, 100)
 
     def handle_event(self, event):
         pass
