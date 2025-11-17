@@ -9,6 +9,7 @@ from camera import Camera
 
 hero = None
 camera = None
+map = None
 
 def handle_events():
     event_list = get_events()
@@ -21,13 +22,14 @@ def handle_events():
             hero.handle_event(event)
 
 def init():
-    global hero, camera
+    global hero, map, camera
 
     hero = Hero()
     game_world.add_object(hero, 1)
 
     map = Map()
     game_world.add_object(map, 0)
+    game_world.map = map
 
     camera = Camera(get_canvas_width(), get_canvas_height(), world_w = map.map_width, world_h = map.map_height, scale=6.0)
     game_world.camera = camera
