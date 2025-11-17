@@ -29,7 +29,7 @@ def init():
     map = Map()
     game_world.add_object(map, 0)
 
-    camera = Camera(get_canvas_width(), get_canvas_height(), world_w = map.map_width, world_h = map.map_height, scale=2.0)
+    camera = Camera(get_canvas_width(), get_canvas_height(), world_w = map.map_width, world_h = map.map_height, scale=6.0)
     game_world.camera = camera
 
 def update():
