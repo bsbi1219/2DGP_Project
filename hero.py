@@ -1,6 +1,7 @@
 from pico2d import *
 import game_framework
 from state_machine import StateMachine
+import game_world
 
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
@@ -69,7 +70,7 @@ class Attack:
             next_state.enter(('AUTO', None))
             self.hero.state_machine.cur_state = next_state
 
-    def draw(self):
+    def draw(self, sx, sy):
         if self.hero.face_dir == 1:
             self.height = 64 * 1
         elif self.hero.face_dir == 2:
@@ -78,7 +79,7 @@ class Attack:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.walk_attack_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 32, 32)
+        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 32, 32)
 
 class Move:
     def __init__(self, hero):
@@ -98,7 +99,7 @@ class Move:
         self.hero.x += self.hero.vx * RUN_SPEED_PPS * ft
         self.hero.y += self.hero.vy * RUN_SPEED_PPS * ft
 
-    def draw(self):
+    def draw(self, sx, sy):
         if self.hero.face_dir == 1:
             self.height = 64 * 1
         elif self.hero.face_dir == 2:
@@ -107,7 +108,7 @@ class Move:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.walk_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 32, 32)
+        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 32, 32)
 
 class Idle:
     def __init__(self, hero):
@@ -126,7 +127,7 @@ class Idle:
         ft = game_framework.frame_time
         self.hero.frame = (self.hero.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * ft) % 4
 
-    def draw(self):
+    def draw(self, sx, sy):
         if self.hero.face_dir == 1:
             self.height = 64 * 1
         elif self.hero.face_dir == 2:
@@ -135,7 +136,7 @@ class Idle:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, self.hero.x, self.hero.y, 32, 32)
+        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 32, 32)
 
 class Hero:
     def __init__(self):
@@ -209,8 +210,10 @@ class Hero:
         self.state_machine.handle_state_event(('INPUT', event))
 
     def draw(self):
-        self.state_machine.draw()
-        draw_rectangle(*self.get_bb())
+        cam = game_world.camera
+        sx, sy = cam.world_to_screen(self.x, self.y)
+        cur = self.state_machine.cur_state
+        cur.draw(sx, sy)
 
     def get_bb(self):
         return self.x - 6, self.y - 8, self.x + 6, self.y + 8
