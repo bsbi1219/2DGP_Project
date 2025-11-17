@@ -8,6 +8,7 @@ from map_1 import Map
 from camera import Camera
 
 hero = None
+camera = None
 
 def handle_events():
     event_list = get_events()
@@ -20,7 +21,7 @@ def handle_events():
             hero.handle_event(event)
 
 def init():
-    global hero
+    global hero, camera
 
     hero = Hero()
     game_world.add_object(hero, 1)
@@ -28,13 +29,13 @@ def init():
     map = Map()
     game_world.add_object(map, 0)
 
-    cam = Camera(get_canvas_width(), get_canvas_height(), world_w=None, world_h=None, scale=2.0)
-
+    camera = Camera(get_canvas_width(), get_canvas_height(), world_w = map.w, world_h=map.h, scale=2.0)
+    game_world.camera = camera
 
 def update():
     game_world.update()
     game_world.handle_collisions()
-    cam.update(hero.x, hero.y)
+    camera.update(hero.x, hero.y)
 
 def draw():
     clear_canvas()
