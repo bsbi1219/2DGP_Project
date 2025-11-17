@@ -6,10 +6,12 @@ import game_world
 from hero import Hero
 from map_1 import Map
 from camera import Camera
+import ui
 
 hero = None
 camera = None
 map = None
+ui_state = None
 
 def handle_events():
     event_list = get_events()
@@ -22,7 +24,7 @@ def handle_events():
             hero.handle_event(event)
 
 def init():
-    global hero, map, camera
+    global hero, map, camera, ui_state
 
     hero = Hero()
     game_world.add_object(hero, 1)
@@ -33,6 +35,9 @@ def init():
 
     camera = Camera(get_canvas_width(), get_canvas_height(), world_w = map.map_width, world_h = map.map_height, scale=6.0)
     game_world.camera = camera
+
+    ui_state = ui.StateUI()
+    game_world.add_object(ui_state, 3)
 
 def update():
     game_world.update()
