@@ -6,6 +6,7 @@ import game_world
 from hero import Hero
 from map_1 import Map
 from camera import Camera
+from slime import Slime
 import ui
 
 hero = None
@@ -32,6 +33,9 @@ def init():
     map = Map()
     game_world.add_object(map, 0)
     game_world.map = map
+
+    slimes = [Slime() for _ in range(20)]
+    game_world.add_objects(slimes, 1)
 
     camera = Camera(get_canvas_width(), get_canvas_height(), world_w = map.map_width, world_h = map.map_height, scale=6.0)
     game_world.camera = camera
