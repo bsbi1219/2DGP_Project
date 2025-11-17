@@ -1,5 +1,6 @@
 from pico2d import *
 import game_framework
+import game_world
 from state_machine import StateMachine
 import random
 
@@ -15,6 +16,7 @@ FRAMES_PER_ACTION = 10.0
 
 class Slime:
     images = None
+    wait_time = get_time()
 
     def load_images(self):
         pass
@@ -30,10 +32,18 @@ class Slime:
         pass
 
     def update(self):
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
+        if get_time() - self.wait_time > 2:
+            self.wait_time = get_time()
+            self.vx = random.choice([-1, 0, 1])
+            self.vy = random.choice([-1, 0, 1])
         pass
 
     def draw(self):
-        pass
+        if self.vx < 0:
+            pass
+        else:
+            pass
 
     def handle_event(self, event):
         pass
