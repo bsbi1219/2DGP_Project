@@ -29,7 +29,7 @@ class Slime:
         self.x, self.y = random.randint(100, 1000), random.randint(100, 900)
         self.face_dir = 1
         self.load_images()
-        self.frame = random.randint(0, 9)
+        self.frame = random.randint(0, 7)
         self.vx = random.choice([-1, 1])
         self.vy = random.choice([-1, 1])
         self.wait_time = get_time()
@@ -37,7 +37,7 @@ class Slime:
         self.hp = 150
         self.atk = 20
         self.defense = 0
-        self.slime_state = 'WALK'
+        self.slime_state = 'Walk'
 
     def get_bb(self):
         pass
@@ -46,8 +46,7 @@ class Slime:
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
         if get_time() - self.wait_time > 2:
             self.wait_time = get_time()
-            self.vx = random.choice([-1, 0, 1])
-            self.vy = random.choice([-1, 0, 1])
+            self.face_dir = random.randint(1, 4)
         pass
 
     def draw(self):
@@ -61,7 +60,7 @@ class Slime:
             self.height = 0
         elif self.face_dir == 4:
             self.height = 64 * 3
-        Slime.images[self.slime_state].clip_draw(int(self.frame) * 64, self.height, 64, 64, sx, sy, 100, 100)
+        Slime.images[self.slime_state].clip_draw(int(self.frame) * 64, self.height, 64, 64, sx, sy, 200, 200)
 
     def handle_event(self, event):
         pass
