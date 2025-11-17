@@ -31,7 +31,7 @@ def a_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
 
 
-PIXEL_PER_METER = (10.0 / 0.2)
+PIXEL_PER_METER = (10.0 / 0.8)
 RUN_SPEED_KMPH = 20.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -79,7 +79,7 @@ class Attack:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 32, 32)
+        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 300, 300)
 
 class Move:
     def __init__(self, hero):
@@ -108,7 +108,7 @@ class Move:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 32, 32)
+        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 300, 300)
 
 class Idle:
     def __init__(self, hero):
@@ -136,7 +136,7 @@ class Idle:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 32, 32)
+        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 300, 300)
 
 class Hero:
     def __init__(self):
