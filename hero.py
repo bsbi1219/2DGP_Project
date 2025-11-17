@@ -79,7 +79,7 @@ class Attack:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 300, 300)
+        self.hero.walk_attack_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 300, 300)
 
 class Move:
     def __init__(self, hero):
@@ -108,7 +108,7 @@ class Move:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 300, 300)
+        self.hero.walk_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 300, 300)
 
 class Idle:
     def __init__(self, hero):
@@ -175,6 +175,11 @@ class Hero:
             vy += 1
         if SDLK_DOWN in self.keys_pressed:
             vy -= 1
+
+        length = (vx ** 2 + vy ** 2) ** 0.5
+        if length != 0:
+            vx /= length
+            vy /= length
 
         self.vx = vx
         self.vy = vy
