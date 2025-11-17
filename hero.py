@@ -181,6 +181,29 @@ class Hero:
             vx /= length
             vy /= length
 
+        ft = game_framework.frame_time
+        new_x = self.x + vx * RUN_SPEED_PPS * ft
+        new_y = self.y + vy * RUN_SPEED_PPS * ft
+
+        for rect in game_world.map.collision_rects:
+            left, bottom, right, top = rect
+            hx1 = new_x - 4
+            hy1 = new_y - 10
+            hx2 = new_x + 4
+            hy2 = new_y - 6
+            if not (hx2 < left or hx1 > right or hy2 < bottom or hy1 > top):
+                # 충돌 감지 -> 간단 처리(기존 처리 유지하거나 축별 분리 권장)
+                if vx > 0:
+                    new_x = left - 150
+                elif vx < 0:
+                    new_x = right + 150
+                if vy > 0:
+                    new_y = bottom - 150
+                elif vy < 0:
+                    new_y = top + 150
+
+        self.x = new_x
+        self.y = new_y
         self.vx = vx
         self.vy = vy
 
@@ -219,9 +242,13 @@ class Hero:
         sx, sy = cam.world_to_screen(self.x, self.y)
         cur = self.state_machine.cur_state
         cur.draw(sx, sy)
+        hx1, hy1, hx2, hy2 = self.get_bb()
+        hx1, hy1 = cam.world_to_screen(hx1, hy1)
+        hx2, hy2 = cam.world_to_screen(hx2, hy2)
+        draw_rectangle(hx1, hy1, hx2, hy2)
 
     def get_bb(self):
-        return self.x - 6, self.y - 8, self.x + 6, self.y + 8
+        return self.x - 4, self.y - 10, self.x + 4, self.y - 6
 
     def handle_collision(self, group, other):
         pass
