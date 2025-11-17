@@ -1,5 +1,6 @@
 import csv
 import game_world
+import json
 from pico2d import *
 
 # 가로 13개, 세로 23개 타일
@@ -28,6 +29,17 @@ class Map:
         self.map_1_object_cave = []
         self.map_1_object_spider = []
         self.map_1_object_wep = []
+        self.collision_rects = []
+
+        with open('csv/맵 1번.tmj', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        for obj in data['layers'][0]['objects']:  # 첫 번째 Object Layer
+            if obj.get('properties'):
+                props = {p['name']: p['value'] for p in obj['properties']}
+                if props.get('collidable', False):
+                    rect = (obj['x'], obj['y'], obj['width'], obj['height'])
+                    self.collision_rects.append(rect)
 
         f_read('csv/맵 1번_바닥.csv', self.map_1_floor)
         f_read('csv/맵 1번_벽.csv', self.map_1_wall)
