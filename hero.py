@@ -41,6 +41,22 @@ TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
+class Hurt:
+    def __init__(self, hero):
+        self.hero = hero
+
+    def enter(self, e):
+        pass
+
+    def exit(self, e):
+        pass
+
+    def do(self):
+        pass
+
+    def draw(self, sx, sy):
+        pass
+
 class Attack:
     def __init__(self, hero):
         self.hero = hero
@@ -156,6 +172,7 @@ class Hero:
         self.idle_image = load_image('Assets/hero/hero_idle.png')
         self.walk_image = load_image('Assets/hero/hero_walk.png')
         self.walk_attack_image = load_image('Assets/hero/hero_walk_attack.png')
+        self.hurt_image = load_image('Assets/hero/hero_hurt.png')
 
         self.IDLE = Idle(self)
         self.MOVE = Move(self)
