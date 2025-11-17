@@ -16,7 +16,6 @@ FRAMES_PER_ACTION = 10.0
 
 class Slime:
     images = None
-    wait_time = get_time()
 
     def load_images(self):
         pass
@@ -27,6 +26,10 @@ class Slime:
         self.frame = random.randint(0, 9)
         self.vx = random.choice([-1, 1])
         self.vy = random.choice([-1, 1])
+        self.wait_time = get_time()
+        self.hp = 150
+        self.atk = 20
+        self.defense = 0
 
     def get_bb(self):
         pass

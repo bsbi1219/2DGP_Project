@@ -147,6 +147,11 @@ class Hero:
         self.vx = 0
         self.vy = 0
         self.keys_pressed = set()
+        self.hp = 500
+        self.level = 1
+        self.exp = 0
+        self.atk = 20
+        self.defense = 20
 
         self.idle_image = load_image('Assets/hero/hero_idle.png')
         self.walk_image = load_image('Assets/hero/hero_walk.png')
