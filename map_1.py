@@ -31,16 +31,6 @@ class Map:
         self.map_1_object_wep = []
         self.collision_rects = []
 
-        with open('csv/맵 1번.tmj', 'r', encoding='utf-8') as f:
-            data = json.load(f)
-
-        for obj in data['layers'][0]['objects']:  # 첫 번째 Object Layer
-            if obj.get('properties'):
-                props = {p['name']: p['value'] for p in obj['properties']}
-                if props.get('collidable', False):
-                    rect = (obj['x'], obj['y'], obj['width'], obj['height'])
-                    self.collision_rects.append(rect)
-
         f_read('csv/맵 1번_바닥.csv', self.map_1_floor)
         f_read('csv/맵 1번_벽.csv', self.map_1_wall)
         f_read('csv/맵 1번_던전 오브젝트.csv', self.map_1_objects)
@@ -52,6 +42,23 @@ class Map:
             raise Exception("맵 바닥 CSV를 읽지 못했음")
         self.map_width = len(self.map_1_floor[0]) * self.tile_size
         self.map_height = len(self.map_1_floor) * self.tile_size
+
+        with open('csv/맵 1번.tmj', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        for layer in data['layers']:
+            if layer['type'] == 'objectgroup':
+                for obj in layer['objects']:
+                    if obj.get('properties'):
+                        props = {p['name']: p['value'] for p in obj['properties']}
+                        if props.get('collidable', False):
+                            y = self.map_height - obj['y'] - obj['height']
+                            left = obj['x']
+                            bottom = y
+                            right = left + obj['width']
+                            top = bottom + obj['height']
+                            rect = (left, bottom, right, top)
+                            self.collision_rects.append(rect)
 
     def draw_map(self, height, map_list, map_image, camera):
         cols = map_image.w // self.tile_size
