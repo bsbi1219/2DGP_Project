@@ -14,11 +14,16 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 10.0
 
+animation_names = ['Walk', 'Run', 'Attack', 'Death']
+
 class Slime:
-    images = None
+    images = {}
 
     def load_images(self):
-        pass
+        Slime.images['Walk'] = load_image(f'Assets/slime/slime 1/Slime1_Walk.png')
+        Slime.images['Run'] = load_image(f'Assets/slime/slime 1/Slime1_Run.png')
+        Slime.images['Attack'] = load_image(f'Assets/slime/slime 1/Slime1_Attack.png')
+        Slime.images['Death'] = load_image(f'Assets/slime/slime 1/Slime1_Death.png')
 
     def __init__(self):
         self.x, self.y = random.randint(100, 1000), random.randint(100, 900)
@@ -27,9 +32,11 @@ class Slime:
         self.vx = random.choice([-1, 1])
         self.vy = random.choice([-1, 1])
         self.wait_time = get_time()
+        self.height = 64 * 3
         self.hp = 150
         self.atk = 20
         self.defense = 0
+        self.slime_state = 'WALK'
 
     def get_bb(self):
         pass
