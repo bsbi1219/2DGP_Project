@@ -14,7 +14,7 @@ TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 10.0
 
-animation_names = ['Walk', 'Run', 'Attack', 'Death']
+animation_names = ['Walk', 'Run', 'Attack', 'Death']\
 
 class Slime:
     images = {}
@@ -44,7 +44,7 @@ class Slime:
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        if get_time() - self.wait_time > 2:
+        if self.slime_state == 'Walk' and get_time() - self.wait_time > 2:
             self.wait_time = get_time()
             self.face_dir = random.randint(1, 4)
         if self.face_dir == 1:
@@ -69,6 +69,14 @@ class Slime:
         elif self.face_dir == 4:
             self.height = 0
         Slime.images[self.slime_state].clip_draw(int(self.frame) * 64, self.height, 64, 64, sx, sy, 200, 200)
+
+        hx1, hy1, hx2, hy2 = self.get_bb()
+        hx1, hy1 = cam.world_to_screen(hx1, hy1)
+        hx2, hy2 = cam.world_to_screen(hx2, hy2)
+        draw_rectangle(hx1, hy1, hx2, hy2)
+
+    def get_bb(self):
+        return self.x - 6, self.y - 4, self.x + 6, self.y + 4
 
     def handle_event(self, event):
         pass
