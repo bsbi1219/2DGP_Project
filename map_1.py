@@ -49,16 +49,17 @@ class Map:
         for layer in data['layers']:
             if layer['type'] == 'objectgroup':
                 for obj in layer['objects']:
-                    if obj.get('properties'):
-                        props = {p['name']: p['value'] for p in obj['properties']}
-                        if props.get('collidable', False):
-                            y = self.map_height - obj['y'] - obj['height']
-                            left = obj['x']
-                            bottom = y
-                            right = left + obj['width']
-                            top = bottom + obj['height']
-                            rect = (left, bottom, right, top)
-                            self.collision_rects.append(rect)
+                    x = obj['x']
+                    y = obj['y']
+                    w = obj['width']
+                    h = obj['height']
+
+                    left = x
+                    right = x + w
+                    bottom = self.map_height - (y + h)
+                    top = self.map_height - y
+
+                    self.collision_rects.append((left, bottom, right, top))
 
     def draw_map(self, height, map_list, map_image, camera):
         cols = map_image.w // self.tile_size
@@ -99,6 +100,11 @@ class Map:
         self.draw_map(height_object_spider, self.map_1_object_spider, self.object_spider_image, cam)
         self.draw_map(height_object_wep, self.map_1_object_wep, self.object_web_image, cam)
 
+        for rect in self.collision_rects:
+            l, b, r, t = rect
+            sx1, sy1 = cam.world_to_screen(l, b)
+            sx2, sy2 = cam.world_to_screen(r, t)
+            draw_rectangle(sx1, sy1, sx2, sy2)
 
     def update(self):
         pass
