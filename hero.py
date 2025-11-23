@@ -48,7 +48,8 @@ class Hurt:
         self.knockback = 5.0
 
     def enter(self, e):
-        pass
+        self.hero.x -= self.knockback * self.hero.vx
+        self.hero.y -= self.knockback * self.hero.vy
 
     def exit(self, e):
         pass
