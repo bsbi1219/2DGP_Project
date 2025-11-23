@@ -7,6 +7,7 @@ from hero import Hero
 from map_1 import Map
 from camera import Camera
 from slime import Slime
+from wall import Wall
 import ui
 
 hero = None
@@ -35,7 +36,11 @@ def init():
     game_world.map = map
 
     game_world.add_collision_pair('hero:wall', hero, None)
-    game_world.add_collision_pair('hero:wall', None, map)
+    for rect in map.collision_rects:
+        left, bottom, right, top = rect
+        wall = Wall(left, bottom, right, top)
+        game_world.add_object(wall, 0)
+        game_world.add_collision_pair('hero:wall', None, wall)
 
     slimes = [Slime() for _ in range(20)]
     game_world.add_objects(slimes, 1)
