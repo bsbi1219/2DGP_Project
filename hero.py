@@ -44,6 +44,8 @@ FRAMES_PER_ACTION = 8
 class Hurt:
     def __init__(self, hero):
         self.hero = hero
+        self.height = 64 * 3
+        self.knockback = 5.0
 
     def enter(self, e):
         pass
@@ -52,10 +54,21 @@ class Hurt:
         pass
 
     def do(self):
-        pass
+        ft = game_framework.frame_time
+        self.hero.frame = (self.hero.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * ft) % 5
 
     def draw(self, sx, sy):
-        pass
+        cam = game_world.camera
+        dw, dh = cam.scale_size(64, 64)
+        if self.hero.face_dir == 1:
+            self.height = 64 * 1
+        elif self.hero.face_dir == 2:
+            self.height = 64 * 2
+        elif self.hero.face_dir == 3:
+            self.height = 0
+        elif self.hero.face_dir == 4:
+            self.height = 64 * 3
+        self.hero.hurt_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
 class Attack:
     def __init__(self, hero):
@@ -87,6 +100,8 @@ class Attack:
             self.hero.state_machine.cur_state = next_state
 
     def draw(self, sx, sy):
+        cam = game_world.camera
+        dw, dh = cam.scale_size(64, 64)
         if self.hero.face_dir == 1:
             self.height = 64 * 1
         elif self.hero.face_dir == 2:
@@ -95,7 +110,7 @@ class Attack:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.walk_attack_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 300, 300)
+        self.hero.walk_attack_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
 class Move:
     def __init__(self, hero):
@@ -103,7 +118,6 @@ class Move:
         self.height = 64 * 3
 
     def enter(self, e):
-        # 키 홀드 방식이면 속도는 Hero.update에서 결정하므로 별도 처리 없음
         pass
 
     def exit(self, e):
@@ -116,6 +130,8 @@ class Move:
         self.hero.y += self.hero.vy * RUN_SPEED_PPS * ft
 
     def draw(self, sx, sy):
+        cam = game_world.camera
+        dw, dh = cam.scale_size(64, 64)
         if self.hero.face_dir == 1:
             self.height = 64 * 1
         elif self.hero.face_dir == 2:
@@ -124,7 +140,7 @@ class Move:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.walk_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 300, 300)
+        self.hero.walk_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
 class Idle:
     def __init__(self, hero):
@@ -144,6 +160,8 @@ class Idle:
         self.hero.frame = (self.hero.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * ft) % 4
 
     def draw(self, sx, sy):
+        cam = game_world.camera
+        dw, dh = cam.scale_size(64, 64)
         if self.hero.face_dir == 1:
             self.height = 64 * 1
         elif self.hero.face_dir == 2:
@@ -152,7 +170,7 @@ class Idle:
             self.height = 0
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
-        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, 300, 300)
+        self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
 class Hero:
     def __init__(self):
@@ -177,13 +195,15 @@ class Hero:
         self.IDLE = Idle(self)
         self.MOVE = Move(self)
         self.ATTACK = Attack(self)
+        self.HURT = Hurt(self)
 
         self.state_machine = StateMachine(self.IDLE, {
             self.IDLE: { right_down: self.MOVE, left_down: self.MOVE, up_down: self.MOVE, down_down: self.MOVE, a_down: self.ATTACK },
             self.MOVE: { right_up: self.IDLE, left_up: self.IDLE, up_up: self.IDLE, down_up: self.IDLE,
                          right_down: self.MOVE, left_down: self.MOVE, up_down: self.MOVE, down_down: self.MOVE,
                          a_down: self.ATTACK },
-            self.ATTACK: {}
+            self.ATTACK: {},
+            self.HURT: {}
         })
 
     def update(self):
@@ -204,26 +224,44 @@ class Hero:
             vy /= length
 
         ft = game_framework.frame_time
+
+        # ---- X축 이동 ----
         new_x = self.x + vx * RUN_SPEED_PPS * ft
+
+        for rect in game_world.map.collision_rects:
+            left, bottom, right, top = rect
+            hx1 = new_x - 6
+            hx2 = new_x + 6
+            hy1 = self.y - 13
+            hy2 = self.y - 6
+
+            if not (hx2 < left or hx1 > right or hy2 < bottom or hy1 > top):
+                # 충돌났음 → 밀어내기
+                if self.x <= left:  # 왼쪽에서 오른쪽으로 박았을 때
+                    new_x = left - 5
+                elif self.x >= right:  # 오른쪽에서 왼쪽으로 박았을 때
+                    new_x = right + 5
+                break
+
+        # ---- Y축 이동 ----
         new_y = self.y + vy * RUN_SPEED_PPS * ft
 
         for rect in game_world.map.collision_rects:
             left, bottom, right, top = rect
-            hx1 = new_x - 4
-            hy1 = new_y - 10
-            hx2 = new_x + 4
+            hx1 = new_x - 6
+            hx2 = new_x + 6
+            hy1 = new_y - 13
             hy2 = new_y - 6
-            if not (hx2 < left or hx1 > right or hy2 < bottom or hy1 > top):
-                # 충돌 감지 -> 간단 처리(기존 처리 유지하거나 축별 분리 권장)
-                if vx > 0:
-                    new_x = left - 150
-                elif vx < 0:
-                    new_x = right + 150
-                if vy > 0:
-                    new_y = bottom - 150
-                elif vy < 0:
-                    new_y = top + 150
 
+            if not (hx2 < left or hx1 > right or hy2 < bottom or hy1 > top):
+                # 충돌났음 → 밀어내기
+                if self.y <= bottom:  # 아래에서 위로 박았을 때
+                    new_y = bottom - 5
+                elif self.y >= top:  # 위에서 아래로 박았을 때
+                    new_y = top + 5
+                break
+
+        # ---- 최종 적용 ----
         self.x = new_x
         self.y = new_y
         self.vx = vx
@@ -270,7 +308,13 @@ class Hero:
         draw_rectangle(hx1, hy1, hx2, hy2)
 
     def get_bb(self):
-        return self.x - 4, self.y - 10, self.x + 4, self.y - 6
+        return self.x - 6, self.y - 13, self.x + 6, self.y - 6
 
     def handle_collision(self, group, other):
-        pass
+        if group == 'hero:slime':
+            self.state_machine.cur_state.exit(None)
+            self.HURT.enter(None)
+            self.state_machine.cur_state = self.HURT
+            self.hp -= 1
+        if group == 'hero:wall':
+            self.vx, self.vy = 0, 0
