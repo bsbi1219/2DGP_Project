@@ -224,49 +224,12 @@ class Hero:
             vx /= length
             vy /= length
 
-        ft = game_framework.frame_time
-
-        # ---- X축 이동 ----
-        new_x = self.x + vx * RUN_SPEED_PPS * ft
-
-        for rect in game_world.map.collision_rects:
-            left, bottom, right, top = rect
-            hx1 = new_x - 6
-            hx2 = new_x + 6
-            hy1 = self.y - 13
-            hy2 = self.y - 6
-
-            if not (hx2 < left or hx1 > right or hy2 < bottom or hy1 > top):
-                # 충돌났음 → 밀어내기
-                if self.x <= left:  # 왼쪽에서 오른쪽으로 박았을 때
-                    new_x = left - 5
-                elif self.x >= right:  # 오른쪽에서 왼쪽으로 박았을 때
-                    new_x = right + 5
-                break
-
-        # ---- Y축 이동 ----
-        new_y = self.y + vy * RUN_SPEED_PPS * ft
-
-        for rect in game_world.map.collision_rects:
-            left, bottom, right, top = rect
-            hx1 = new_x - 6
-            hx2 = new_x + 6
-            hy1 = new_y - 13
-            hy2 = new_y - 6
-
-            if not (hx2 < left or hx1 > right or hy2 < bottom or hy1 > top):
-                # 충돌났음 → 밀어내기
-                if self.y <= bottom:  # 아래에서 위로 박았을 때
-                    new_y = bottom - 5
-                elif self.y >= top:  # 위에서 아래로 박았을 때
-                    new_y = top + 5
-                break
-
-        # ---- 최종 적용 ----
-        self.x = new_x
-        self.y = new_y
         self.vx = vx
         self.vy = vy
+
+        ft = game_framework.frame_time
+        self.x += self.vx * RUN_SPEED_PPS * ft
+        self.y += self.vy * RUN_SPEED_PPS * ft
 
         if self.vx > 0:
             self.face_dir = 1
@@ -318,4 +281,23 @@ class Hero:
             self.state_machine.cur_state = self.HURT
             self.hp -= 1
         if group == 'hero:wall':
-            self.vx, self.vy = 0, 0
+            wall_left, wall_bottom, wall_right, wall_top = other.get_bb()
+            hero_left, hero_bottom, hero_right, hero_top = self.get_bb()
+
+            # 겹친 정도 계산
+            overlap_left = hero_right - wall_left
+            overlap_right = wall_right - hero_left
+            overlap_bottom = hero_top - wall_bottom
+            overlap_top = wall_top - hero_bottom
+
+            # 가장 작은 겹침으로 밀어내기
+            min_overlap = min(overlap_left, overlap_right, overlap_bottom, overlap_top)
+
+            if min_overlap == overlap_left:
+                self.x -= overlap_left
+            elif min_overlap == overlap_right:
+                self.x += overlap_right
+            elif min_overlap == overlap_bottom:
+                self.y -= overlap_bottom
+            elif min_overlap == overlap_top:
+                self.y += overlap_top
