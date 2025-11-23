@@ -45,7 +45,7 @@ class Hurt:
     def __init__(self, hero):
         self.hero = hero
         self.height = 64 * 3
-        self.knockback = 5.0
+        self.knockback = 20.0
 
     def enter(self, e):
         self.hero.x -= self.knockback * self.hero.vx
@@ -182,6 +182,7 @@ class Hero:
         self.vx = 0
         self.vy = 0
         self.keys_pressed = set()
+        self.max_hp = 500
         self.hp = 500
         self.level = 1
         self.exp = 0
@@ -275,11 +276,11 @@ class Hero:
         return self.x - 6, self.y - 13, self.x + 6, self.y - 6
 
     def handle_collision(self, group, other):
-        if group == 'hero:slime':
+        if group == 'hero:slime' and self.state_machine.cur_state != self.HURT:
             self.state_machine.cur_state.exit(None)
             self.HURT.enter(None)
             self.state_machine.cur_state = self.HURT
-            self.hp -= 1
+            self.hp -= 50
         if group == 'hero:wall':
             wall_left, wall_bottom, wall_right, wall_top = other.get_bb()
             hero_left, hero_bottom, hero_right, hero_top = self.get_bb()
