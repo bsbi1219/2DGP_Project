@@ -60,6 +60,7 @@ class Slime:
     def draw(self):
         cam = game_world.camera
         sx, sy = cam.world_to_screen(self.x, self.y)
+        dw, dh = cam.scale_size(48, 48)
         if self.face_dir == 1:
             self.height = 64 * 3
         elif self.face_dir == 2:
@@ -68,7 +69,7 @@ class Slime:
             self.height = 64
         elif self.face_dir == 4:
             self.height = 0
-        Slime.images[self.slime_state].clip_draw(int(self.frame) * 64, self.height, 64, 64, sx, sy, 200, 200)
+        Slime.images[self.slime_state].clip_draw(int(self.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
         hx1, hy1, hx2, hy2 = self.get_bb()
         hx1, hy1 = cam.world_to_screen(hx1, hy1)
