@@ -34,8 +34,15 @@ def init():
     game_world.add_object(map, 0)
     game_world.map = map
 
+    game_world.add_collision_pair('hero:wall', hero, None)
+    game_world.add_collision_pair('hero:wall', None, map)
+
     slimes = [Slime() for _ in range(20)]
     game_world.add_objects(slimes, 1)
+
+    game_world.add_collision_pair('hero:slime', hero, None)
+    for slime in slimes:
+        game_world.add_collision_pair('hero:slime', None, slime)
 
     camera = Camera(get_canvas_width(), get_canvas_height(), world_w = map.map_width, world_h = map.map_height, scale=6.0)
     game_world.camera = camera
