@@ -82,4 +82,12 @@ class Slime:
         pass
 
     def handle_collision(self, other, group):
-        pass
+        if group == 'slime:wall':
+            if self.face_dir == 1:
+                self.face_dir = 2
+            elif self.face_dir == 2:
+                self.face_dir = 1
+            elif self.face_dir == 3:
+                self.face_dir = 4
+            elif self.face_dir == 4:
+                self.face_dir = 3
