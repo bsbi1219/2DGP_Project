@@ -13,3 +13,6 @@ class Wall:
 
     def draw(self):
         pass
+
+    def handle_collision(self, group, other):
+        pass
