@@ -30,6 +30,7 @@ def init():
 
     hero = Hero()
     game_world.add_object(hero, 1)
+    game_world.hero = hero
 
     map = Map()
     game_world.add_object(map, 0)
