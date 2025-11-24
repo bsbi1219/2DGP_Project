@@ -46,8 +46,12 @@ class Hurt:
         self.hero = hero
         self.height = 64 * 3
         self.knockback = 20.0
+        self.duration = 5 / FRAMES_PER_ACTION
+        self.elapsed = 0.0
 
     def enter(self, e):
+        self.hero.frame = 0
+        self.elapsed = 0.0
         self.hero.x -= self.knockback * self.hero.vx
         self.hero.y -= self.knockback * self.hero.vy
 
@@ -56,7 +60,15 @@ class Hurt:
 
     def do(self):
         ft = game_framework.frame_time
+        self.elapsed += ft
         self.hero.frame = (self.hero.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * ft) % 5
+
+        if self.elapsed >= self.duration:
+            self.exit(None)
+            moving = (self.hero.vx != 0 or self.hero.vy != 0)
+            next_state = self.hero.MOVE if moving else self.hero.IDLE
+            next_state.enter(('AUTO', None))
+            self.hero.state_machine.cur_state = next_state
 
     def draw(self, sx, sy):
         cam = game_world.camera
@@ -149,7 +161,6 @@ class Idle:
         self.height = 64 * 3
 
     def enter(self, e):
-        self.hero.wait_time = get_time()
         self.hero.vx = 0
         self.hero.vy = 0
 
