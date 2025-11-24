@@ -292,6 +292,11 @@ class Hero:
             self.HURT.enter(None)
             self.state_machine.cur_state = self.HURT
             self.hp -= 50
+        if group == 'hero:goblin' and self.state_machine.cur_state != self.HURT:
+            self.state_machine.cur_state.exit(None)
+            self.HURT.enter(None)
+            self.state_machine.cur_state = self.HURT
+            self.hp -= 50
         if group == 'hero:wall':
             wall_left, wall_bottom, wall_right, wall_top = other.get_bb()
             hero_left, hero_bottom, hero_right, hero_top = self.get_bb()
