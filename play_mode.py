@@ -7,6 +7,7 @@ from hero import Hero
 from map_1 import Map
 from camera import Camera
 from slime import Slime
+from goblin import Goblin
 from wall import Wall
 import ui
 
@@ -39,9 +40,16 @@ def init():
     slimes = [Slime() for _ in range(20)]
     game_world.add_objects(slimes, 1)
 
+    goblins = [Goblin() for _ in range(20)]
+    game_world.add_objects(goblins, 1)
+
     game_world.add_collision_pair('hero:slime', hero, None)
     for slime in slimes:
         game_world.add_collision_pair('hero:slime', None, slime)
+
+    game_world.add_collision_pair('hero:goblin', hero, None)
+    for goblin in goblins:
+        game_world.add_collision_pair('hero:goblin', None, goblin)
 
     game_world.add_collision_pair('hero:wall', hero, None)
     for slime in slimes:
