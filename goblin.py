@@ -20,10 +20,10 @@ class Goblin:
     images = {}
 
     def load_images(self):
-        Goblin.images['Walk'] = load_image(f'Assets/goblin/goblin 1/Slime1_Walk.png')
-        Goblin.images['Run'] = load_image(f'Assets/goblin/goblin 1/Slime1_Run.png')
-        Goblin.images['Attack'] = load_image(f'Assets/goblin/goblin 1/Slime1_Attack.png')
-        Goblin.images['Death'] = load_image(f'Assets/goblin/goblin 1/Slime1_Death.png')
+        Goblin.images['Walk'] = load_image(f'Assets/goblin/goblin 1/orc1_walk.png')
+        Goblin.images['Run'] = load_image(f'Assets/goblin/goblin 1/orc1_run.png')
+        Goblin.images['Attack'] = load_image(f'Assets/goblin/goblin 1/orc1_attack.png')
+        Goblin.images['Death'] = load_image(f'Assets/goblin/goblin 1/orc1_death.png')
 
     def __init__(self):
         self.x, self.y = random.randint(100, 1000), random.randint(100, 900)
@@ -43,7 +43,7 @@ class Goblin:
         pass
 
     def update(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
         if self.goblin_state == 'Walk' and get_time() - self.wait_time > 2:
             self.wait_time = get_time()
             self.face_dir = random.randint(1, 4)
@@ -77,7 +77,7 @@ class Goblin:
         draw_rectangle(hx1, hy1, hx2, hy2)
 
     def get_bb(self):
-        return self.x - 6, self.y - 4, self.x + 6, self.y + 4
+        return self.x - 8, self.y - 8, self.x + 8, self.y + 5
 
     def handle_event(self, event):
         pass
