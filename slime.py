@@ -14,7 +14,7 @@ TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 10.0
 
-animation_names = ['Walk', 'Run', 'Attack', 'Death']
+animation_names = ['Walk', 'Run', 'Attack', 'Death', 'hurt']
 
 def start_pos(box_x=6, box_y=4):
     m = game_world.map
@@ -49,6 +49,7 @@ class Slime:
         Slime.images['Run'] = load_image(f'Assets/slime/slime 1/Slime1_Run.png')
         Slime.images['Attack'] = load_image(f'Assets/slime/slime 1/Slime1_Attack.png')
         Slime.images['Death'] = load_image(f'Assets/slime/slime 1/Slime1_Death.png')
+        Slime.images['hurt'] = load_image(f'Assets/slime/slime 1/Slime1_Hurt.png')
 
     def __init__(self):
         self.x, self.y = start_pos()

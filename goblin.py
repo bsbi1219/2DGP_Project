@@ -14,7 +14,7 @@ TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 10.0
 
-animation_names = ['Walk', 'Run', 'Attack', 'Death']
+animation_names = ['Walk', 'Run', 'Attack', 'Death', 'hurt']
 
 def start_pos(box_x=8):
     m = game_world.map
@@ -49,6 +49,7 @@ class Goblin:
         Goblin.images['Run'] = load_image(f'Assets/goblin/goblin 1/orc1_run.png')
         Goblin.images['Attack'] = load_image(f'Assets/goblin/goblin 1/orc1_attack.png')
         Goblin.images['Death'] = load_image(f'Assets/goblin/goblin 1/orc1_death.png')
+        Goblin.images['hurt'] = load_image(f'Assets/goblin/goblin 1/orc1_hurt.png')
 
     def __init__(self):
         self.x, self.y = start_pos()
