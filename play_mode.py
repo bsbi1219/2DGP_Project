@@ -37,15 +37,21 @@ def init():
     game_world.add_object(map, 0)
     game_world.map = map
 
+    # 슬라임
     game_world.add_collision_pair('slime:wall', None, None)
     slimes = [Slime() for _ in range(20)]
     game_world.add_objects(slimes, 1)
     for slime in slimes:
         game_world.add_collision_pair('slime:wall', slime, None)
 
+    # 고블린
+    game_world.add_collision_pair('goblin:wall', None, None)
     goblins = [Goblin() for _ in range(20)]
     game_world.add_objects(goblins, 1)
+    for goblin in goblins:
+        game_world.add_collision_pair('goblin:wall', goblin, None)
 
+    # Hero와 충돌 처리
     game_world.add_collision_pair('hero:slime', hero, None)
     for slime in slimes:
         game_world.add_collision_pair('hero:slime', None, slime)
@@ -54,6 +60,7 @@ def init():
     for goblin in goblins:
         game_world.add_collision_pair('hero:goblin', None, goblin)
 
+    # 벽과 충돌 처리
     game_world.add_collision_pair('hero:wall', hero, None)
     for rect in map.collision_rects:
         left, bottom, right, top = rect
@@ -61,6 +68,7 @@ def init():
         game_world.add_object(wall, 0)
         game_world.add_collision_pair('hero:wall', None, wall)
         game_world.add_collision_pair('slime:wall', None, wall)
+        game_world.add_collision_pair('goblin:wall', None, wall)
 
     camera = Camera(get_canvas_width(), get_canvas_height(), world_w = map.map_width, world_h = map.map_height, scale=6.0)
     game_world.camera = camera

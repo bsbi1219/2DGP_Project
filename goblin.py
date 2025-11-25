@@ -16,6 +16,31 @@ FRAMES_PER_ACTION = 10.0
 
 animation_names = ['Walk', 'Run', 'Attack', 'Death']
 
+def start_pos(box_x=8):
+    m = game_world.map
+    max_x = m.map_width - 1
+    max_y = m.map_height - 1
+
+    # 충돌박스와 겹치지 않는 위치 찾기
+    while True:
+        x = random.randint(0, max_x)
+        y = random.randint(0, max_y)
+
+        left = x - box_x
+        right = x + box_x
+        bottom = y - 8
+        top = y + 5
+
+        lap = False
+        for rect in m.collision_rects:
+            rl, rb, rr, rt = rect
+            if not (right < rl or left > rr or top < rb or bottom > rt):
+                lap = True
+                break
+
+        if not lap:
+            return x, y
+
 class Goblin:
     images = {}
 
@@ -26,7 +51,9 @@ class Goblin:
         Goblin.images['Death'] = load_image(f'Assets/goblin/goblin 1/orc1_death.png')
 
     def __init__(self):
-        self.x, self.y = random.randint(100, 1000), random.randint(100, 900)
+        self.x, self.y = start_pos()
+        self.prev_x = self.x
+        self.prev_y = self.y
         self.face_dir = 1 # 앞뒤좌우
         self.load_images()
         self.frame = random.randint(0, 7)
@@ -39,10 +66,9 @@ class Goblin:
         self.defense = 0
         self.goblin_state = 'Walk'
 
-    def get_bb(self):
-        pass
-
     def update(self):
+        self.prev_x = self.x
+        self.prev_y = self.y
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 6
         if self.goblin_state == 'Walk' and get_time() - self.wait_time > 2:
             self.wait_time = get_time()
@@ -82,13 +108,16 @@ class Goblin:
     def handle_event(self, event):
         pass
 
-    def handle_collision(self, other, group):
+    def handle_collision(self, group, other):
         if group == 'goblin:wall':
+            print("goblin hit wall")
+            self.x = self.prev_x
+            self.y = self.prev_y
             if self.face_dir == 1:
-                self.face_dir = 2
+                self.face_dir = random.randint(2, 4)
             elif self.face_dir == 2:
-                self.face_dir = 1
+                self.face_dir = random.randint(3, 4)
             elif self.face_dir == 3:
-                self.face_dir = 4
+                self.face_dir = random.randint(1, 2)
             elif self.face_dir == 4:
-                self.face_dir = 3
+                self.face_dir = random.randint(1, 3)
