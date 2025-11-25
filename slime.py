@@ -66,9 +66,6 @@ class Slime:
         self.defense = 0
         self.slime_state = 'Walk'
 
-    def get_bb(self):
-        pass
-
     def update(self):
         self.prev_x = self.x
         self.prev_y = self.y
