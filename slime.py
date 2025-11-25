@@ -27,6 +27,8 @@ class Slime:
 
     def __init__(self):
         self.x, self.y = random.randint(100, 1000), random.randint(100, 900)
+        self.prev_x = self.x
+        self.prev_y = self.y
         self.face_dir = 1 # 앞뒤좌우
         self.load_images()
         self.frame = random.randint(0, 7)
@@ -43,6 +45,8 @@ class Slime:
         pass
 
     def update(self):
+        self.prev_x = self.x
+        self.prev_y = self.y
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         if self.slime_state == 'Walk' and get_time() - self.wait_time > 2:
             self.wait_time = get_time()
@@ -55,7 +59,7 @@ class Slime:
             self.x -= self.vx * RUN_SPEED_PPS * game_framework.frame_time
         elif self.face_dir == 4:
             self.x += self.vx * RUN_SPEED_PPS * game_framework.frame_time
-        pass
+
 
     def draw(self):
         cam = game_world.camera
@@ -82,8 +86,11 @@ class Slime:
     def handle_event(self, event):
         pass
 
-    def handle_collision(self, other, group):
+    def handle_collision(self, group, other):
         if group == 'slime:wall':
+            print("slime hit wall")
+            self.x = self.prev_x
+            self.y = self.prev_y
             if self.face_dir == 1:
                 self.face_dir = 2
             elif self.face_dir == 2:

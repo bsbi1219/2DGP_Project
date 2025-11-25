@@ -37,8 +37,11 @@ def init():
     game_world.add_object(map, 0)
     game_world.map = map
 
+    game_world.add_collision_pair('slime:wall', None, None)
     slimes = [Slime() for _ in range(20)]
     game_world.add_objects(slimes, 1)
+    for slime in slimes:
+        game_world.add_collision_pair('slime:wall', slime, None)
 
     goblins = [Goblin() for _ in range(20)]
     game_world.add_objects(goblins, 1)
@@ -52,8 +55,6 @@ def init():
         game_world.add_collision_pair('hero:goblin', None, goblin)
 
     game_world.add_collision_pair('hero:wall', hero, None)
-    for slime in slimes:
-        game_world.add_collision_pair('slime:wall', slime, None)
     for rect in map.collision_rects:
         left, bottom, right, top = rect
         wall = Wall(left, bottom, right, top)
