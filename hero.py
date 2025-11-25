@@ -83,6 +83,9 @@ class Hurt:
             self.height = 64 * 3
         self.hero.hurt_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
+    def get_bb(self):
+        pass
+
 class Attack:
     def __init__(self, hero):
         self.hero = hero
@@ -126,7 +129,7 @@ class Attack:
         self.hero.walk_attack_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
     def get_bb(self):
-        return self.hero.x - 6, self.hero.y - 13, self.hero.x + 6, self.hero.y - 6
+        return self.hero.x + 6, self.hero.y - 13, self.hero.x + 18, self.hero.y - 6
 
 class Move:
     def __init__(self, hero):
@@ -158,6 +161,9 @@ class Move:
             self.height = 64 * 3
         self.hero.walk_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
+    def get_bb(self):
+        pass
+
 class Idle:
     def __init__(self, hero):
         self.hero = hero
@@ -186,6 +192,9 @@ class Idle:
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
         self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
+
+    def get_bb(self):
+        pass
 
 class Hero:
     def __init__(self):
