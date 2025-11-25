@@ -125,6 +125,9 @@ class Attack:
             self.height = 64 * 3
         self.hero.walk_attack_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
+    def get_bb(self):
+        return self.hero.x - 6, self.hero.y - 13, self.hero.x + 6, self.hero.y - 6
+
 class Move:
     def __init__(self, hero):
         self.hero = hero
@@ -284,6 +287,7 @@ class Hero:
         draw_rectangle(hx1, hy1, hx2, hy2)
 
     def get_bb(self):
+        self.state_machine.get_bb()
         return self.x - 6, self.y - 13, self.x + 6, self.y - 6
 
     def handle_collision(self, group, other):
