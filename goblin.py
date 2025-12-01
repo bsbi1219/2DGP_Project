@@ -79,6 +79,7 @@ class Goblin:
             self.goblin_state = 'Walk'
         if self.goblin_state == 'Death':
             if int(self.frame) >= 7:
+                game_world.hero.add_exp(5)
                 game_world.remove_object(self)
             return
         if self.face_dir == 1:
