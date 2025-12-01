@@ -145,3 +145,5 @@ class Slime:
                 self.frame = 0
                 self.frame_num = 5
                 self.wait_time = get_time()
+        if group == 'hero_body:slime':
+            pass

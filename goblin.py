@@ -145,3 +145,5 @@ class Goblin:
                 self.frame = 0
                 self.frame_num = 6
                 self.wait_time = get_time()
+        if group == 'hero_body:goblin':
+            pass
