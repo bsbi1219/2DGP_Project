@@ -33,6 +33,11 @@ class StateUI:
 
         self.font.draw(160, 90, f'Level: {hero.level}', (255, 255, 255))
         self.font.draw(20, 930, f'Gold: {hero.gold}G', (255, 255, 255))
+
+        if hero.dead:
+            self.font.draw(get_canvas_width() // 2 - 120, get_canvas_height() // 2,
+                           "YOU DIED", (255, 0, 0))
+
     def update(self):
         pass
 
