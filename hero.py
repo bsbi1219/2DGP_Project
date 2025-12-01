@@ -103,8 +103,8 @@ class Attack:
         self.elapsed += ft
         self.hero.frame = (self.hero.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * ft) % 6
 
-        self.hero.x += self.hero.vx * RUN_SPEED_PPS * ft
-        self.hero.y += self.hero.vy * RUN_SPEED_PPS * ft
+        # self.hero.x += self.hero.vx * RUN_SPEED_PPS * ft
+        # self.hero.y += self.hero.vy * RUN_SPEED_PPS * ft
 
         if self.elapsed >= self.duration:
             self.exit(None)
@@ -350,3 +350,7 @@ class Hero:
                 self.y -= overlap_bottom
             elif min_overlap == overlap_top:
                 self.y += overlap_top
+        if group == 'hero_attack:slime':
+            pass
+        if group == 'hero_attack:goblin':
+            pass

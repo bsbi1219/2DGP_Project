@@ -74,6 +74,10 @@ class Slime:
         if self.slime_state == 'Walk' and get_time() - self.wait_time > 2:
             self.wait_time = get_time()
             self.face_dir = random.randint(1, 4)
+        if self.slime_state == 'Hurt' and get_time() - self.wait_time > 0.5:
+            self.slime_state = 'Walk'
+        if self.slime_state == 'Death':
+            pass
         if self.face_dir == 1:
             self.y -= self.vy * RUN_SPEED_PPS * game_framework.frame_time
         elif self.face_dir == 2:
@@ -122,3 +126,21 @@ class Slime:
                 self.face_dir = random.randint(1, 2)
             elif self.face_dir == 4:
                 self.face_dir = random.randint(1, 3)
+        if group == 'hero_attack:slime':
+            attack_bb = other.get_attack_bb()
+            if attack_bb is None:
+                return
+
+            ax1, ay1, ax2, ay2 = attack_bb
+            bx1, by1, bx2, by2 = self.get_bb()
+
+            if not (ax1 > bx2 or ax2 < bx1 or ay2 < by1 or ay1 > by2):
+                print("slime hit by hero")
+
+                self.hp -= other.atk - self.defense
+
+                if self.hp <= 0:
+                    self.slime_state = 'Death'
+                else:
+                    self.slime_state = 'hurt'
+                    self.wait_time = get_time()
