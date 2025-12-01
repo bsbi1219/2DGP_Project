@@ -130,13 +130,13 @@ class Attack:
         x = self.hero.x
         y = self.hero.y
         if self.hero.face_dir == 1:
-            return x, y - 10, x + 40, y + 10
+            return x, y - 15, x + 24, y + 15
         elif self.hero.face_dir == 2:
-            return x - 40, y - 10, x, y + 10
+            return x - 24, y - 15, x, y + 15
         elif self.hero.face_dir == 3:
-            return x - 10, y, x + 10, y + 40
+            return x - 15, y, x + 15, y + 24
         elif self.hero.face_dir == 4:
-            return x - 10, y - 40, x + 10, y
+            return x - 15, y - 24, x + 15, y
 
 class Move:
     def __init__(self, hero):
@@ -322,11 +322,13 @@ class Hero:
             self.HURT.enter(None)
             self.state_machine.cur_state = self.HURT
             self.hp -= 50
+            self.vx, self.vy = 0, 0
         if group == 'hero_body:goblin' and self.state_machine.cur_state != self.HURT:
             self.state_machine.cur_state.exit(None)
             self.HURT.enter(None)
             self.state_machine.cur_state = self.HURT
             self.hp -= 50
+            self.vx, self.vy = 0, 0
         if group == 'hero_body:wall':
             wall_left, wall_bottom, wall_right, wall_top = other.get_bb()
             hero_left, hero_bottom, hero_right, hero_top = self.get_bb()
