@@ -66,18 +66,21 @@ class Slime:
         self.atk = 20
         self.defense = 0
         self.slime_state = 'Walk'
+        self.frame_num = 8
 
     def update(self):
         self.prev_x = self.x
         self.prev_y = self.y
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.frame_num
         if self.slime_state == 'Walk' and get_time() - self.wait_time > 2:
             self.wait_time = get_time()
             self.face_dir = random.randint(1, 4)
         if self.slime_state == 'Hurt' and get_time() - self.wait_time > 0.5:
             self.slime_state = 'Walk'
         if self.slime_state == 'Death':
-            pass
+            if int(self.frame) >= 9:
+                game_world.remove_object(self)
+            return
         if self.face_dir == 1:
             self.y -= self.vy * RUN_SPEED_PPS * game_framework.frame_time
         elif self.face_dir == 2:
@@ -134,7 +137,9 @@ class Slime:
             if self.hp <= 0:
                 self.slime_state = 'Death'
                 self.frame = 0
+                self.frame_num = 10
             else:
                 self.slime_state = 'Hurt'
                 self.frame = 0
+                self.frame_num = 5
                 self.wait_time = get_time()
