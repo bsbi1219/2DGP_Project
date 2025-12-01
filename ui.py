@@ -6,7 +6,7 @@ class StateUI:
     def __init__(self):
         self.ui_image = load_image('Assets/UI/ui.png')
         self.hp_image = load_image('Assets/UI/2 Bars/HealthBar4.png')
-        self.exp_image = load_image('Assets/UI/2 Bars/EXP_bar.png')
+        self.exp_image = load_image('Assets/UI/2 Bars/EnergyBar4.png')
         self.hero_image = load_image('Assets/icon/hero.png')
 
         self.font = load_font('Assets/DNFBitBitv2.otf', 28)
@@ -28,11 +28,11 @@ class StateUI:
         self.hp_image.clip_draw(0, 0, clip_width, 14, cam_hero_x + draw_width / 2 - 50, cam_hero_y + 110, draw_width, 20)
 
         exp_ratio = hero.exp / hero.next_exp
-        exp_bar_width = int(300 * exp_ratio)
-        draw_rectangle(120, 25, 120 + 300, 40)
-        draw_rectangle(120, 30, 120 + exp_bar_width, 45)
+        exp_bar_width = int(1280 * exp_ratio)
+        self.exp_image.clip_draw(0, 0, exp_bar_width, 14, exp_bar_width / 2, 0, exp_bar_width, 20)
 
         self.font.draw(160, 90, f'Level: {hero.level}', (255, 255, 255))
+        self.font.draw(20, 930, f'Gold: {hero.gold}G', (255, 255, 255))
     def update(self):
         pass
 
