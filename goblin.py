@@ -62,8 +62,8 @@ class Goblin:
         self.vy = 1
         self.wait_time = get_time()
         self.height = 64 * 3
-        self.hp = 150
-        self.atk = 20
+        self.hp = 200
+        self.atk = 10
         self.defense = 0
         self.goblin_state = 'Walk'
         self.frame_num = 6
@@ -80,6 +80,7 @@ class Goblin:
         if self.goblin_state == 'Death':
             if int(self.frame) >= 7:
                 game_world.hero.get_exp(8)
+                game_world.hero.get_gold(10)
                 game_world.remove_object(self)
             return
         if self.face_dir == 1:
