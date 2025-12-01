@@ -61,11 +61,33 @@ def handle_collisions():
     for group, pairs in collision_pairs.items():
         for a in pairs[0]:
             for b in pairs[1]:
-                if not hasattr(a, 'get_bb') or not hasattr(b, 'get_bb'):
-                    continue
-                if collide(a, b):
+                # hero_attack 그룹은 attack_bb로 판정
+                if group.startswith('hero_attack'):
+                    # a 가 hero (공격자) 라고 가정
+                    if not hasattr(a, 'get_attack_bb') or not hasattr(b, 'get_bb'):
+                        continue
+
+                    attack_bb = a.get_attack_bb()
+                    if attack_bb is None:
+                        continue  # 공격 프레임이 아닐 때
+
+                    ax1, ay1, ax2, ay2 = attack_bb
+                    bx1, by1, bx2, by2 = b.get_bb()
+
+                    # 사각형 겹침 체크
+                    if ax1 > bx2 or ax2 < bx1 or ay2 < by1 or ay1 > by2:
+                        continue
+
+                    # 여기까지 왔으면 "공격 박스와 슬라임 박스가 겹친 상태"
                     a.handle_collision(group, b)
                     b.handle_collision(group, a)
+                else:
+                    # 나머지 그룹은 기존 body bb로 처리
+                    if not hasattr(a, 'get_bb') or not hasattr(b, 'get_bb'):
+                        continue
+                    if collide(a, b):
+                        a.handle_collision(group, b)
+                        b.handle_collision(group, a)
 
 # collision pair에 들어있는 모든 o를 제거
 def remove_collision_object(o):
