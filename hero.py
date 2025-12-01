@@ -225,7 +225,7 @@ class Hero:
         self.keys_pressed = set()
 
         self.max_hp = 100
-        self.hp = 100
+        self.hp = 200
         self.level = 1
         self.exp = 0
         self.next_exp = 20
