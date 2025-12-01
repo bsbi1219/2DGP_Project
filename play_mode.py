@@ -53,12 +53,16 @@ def init():
 
     # Hero와 충돌 처리
     game_world.add_collision_pair('hero_body:slime', hero, None)
+    game_world.add_collision_pair('hero_attack:slime', hero, None)
     for slime in slimes:
         game_world.add_collision_pair('hero_body:slime', None, slime)
+        game_world.add_collision_pair('hero_attack:slime', None, slime)
 
     game_world.add_collision_pair('hero_body:goblin', hero, None)
+    game_world.add_collision_pair('hero_attack:goblin', hero, None)
     for goblin in goblins:
         game_world.add_collision_pair('hero_body:goblin', None, goblin)
+        game_world.add_collision_pair('hero_attack:goblin', None, goblin)
 
     # 벽과 충돌 처리
     game_world.add_collision_pair('hero_body:wall', hero, None)
