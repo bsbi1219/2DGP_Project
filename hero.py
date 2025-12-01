@@ -211,6 +211,7 @@ class Hero:
         self.hp = 500
         self.level = 1
         self.exp = 0
+        self.next_exp = 20
         self.atk = 20
         self.defense = 20
 
@@ -232,6 +233,20 @@ class Hero:
             self.ATTACK: {},
             self.HURT: {}
         })
+
+    def get_exp(self, amount):
+        self.exp += amount
+        while self.exp >= self.next_exp:
+            self.exp -= self.next_exp
+            self.level_up()
+
+    def level_up(self):
+        self.level += 1
+        self.next_exp = 20 + (self.level^2) * 5
+        self.max_hp += 30
+        self.atk += 5
+        self.defense += 2
+        self.hp = self.max_hp
 
     def get_body_bb(self):
         return self.x - 6, self.y - 13, self.x + 6, self.y - 6
