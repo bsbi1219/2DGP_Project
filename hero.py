@@ -134,7 +134,7 @@ class Attack:
         elif self.hero.face_dir == 2:
             return x - 24, y - 15, x, y + 15
         elif self.hero.face_dir == 3:
-            return x - 15, y, x + 15, y + 24
+            return x - 15, y, x + 15, y + 17
         elif self.hero.face_dir == 4:
             return x - 15, y - 24, x + 15, y
 
@@ -207,6 +207,7 @@ class Hero:
         self.vx = 0
         self.vy = 0
         self.keys_pressed = set()
+
         self.max_hp = 500
         self.hp = 500
         self.level = 1
@@ -214,6 +215,8 @@ class Hero:
         self.next_exp = 20
         self.atk = 20
         self.defense = 20
+
+        self.gold = 0
 
         self.idle_image = load_image('Assets/hero/hero_idle.png')
         self.walk_image = load_image('Assets/hero/hero_walk.png')
@@ -233,6 +236,9 @@ class Hero:
             self.ATTACK: {},
             self.HURT: {}
         })
+
+    def get_gold(self, amount):
+        self.gold += amount
 
     def get_exp(self, amount):
         self.exp += amount
