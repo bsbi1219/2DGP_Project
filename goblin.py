@@ -63,7 +63,7 @@ class Goblin:
         self.wait_time = get_time()
         self.height = 64 * 3
         self.hp = 200
-        self.atk = 10
+        self.atk = 15
         self.defense = 0
         self.goblin_state = 'Walk'
         self.frame_num = 6
