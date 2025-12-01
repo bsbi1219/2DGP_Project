@@ -126,6 +126,17 @@ class Attack:
             self.height = 64 * 3
         self.hero.walk_attack_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
+    def get_attack_bb(self):
+        x = self.hero.x
+        y = self.hero.y
+        if self.hero.face_dir == 1:
+            return x, y - 10, x + 40, y + 10
+        elif self.hero.face_dir == 2:
+            return x - 40, y - 10, x, y + 10
+        elif self.hero.face_dir == 3:
+            return x - 10, y, x + 10, y + 40
+        elif self.hero.face_dir == 4:
+            return x - 10, y - 40, x + 10, y
 
 class Move:
     def __init__(self, hero):
@@ -225,6 +236,11 @@ class Hero:
     def get_body_bb(self):
         return self.x - 6, self.y - 13, self.x + 6, self.y - 6
 
+    def get_attack_bb(self):
+        if self.state_machine.cur_state is self.ATTACK:
+            return self.ATTACK.get_attack_bb()
+        return None
+
     def update(self):
         vx = 0
         vy = 0
@@ -284,10 +300,18 @@ class Hero:
         sx, sy = cam.world_to_screen(self.x, self.y)
         cur = self.state_machine.cur_state
         cur.draw(sx, sy)
+
         hx1, hy1, hx2, hy2 = self.get_bb()
         hx1, hy1 = cam.world_to_screen(hx1, hy1)
         hx2, hy2 = cam.world_to_screen(hx2, hy2)
         draw_rectangle(hx1, hy1, hx2, hy2)
+
+        attack_bb = self.get_attack_bb()
+        if attack_bb:
+            ax1, ay1, ax2, ay2 = attack_bb
+            ax1, ay1 = cam.world_to_screen(ax1, ay1)
+            ax2, ay2 = cam.world_to_screen(ax2, ay2)
+            draw_rectangle(ax1, ay1, ax2, ay2)
 
     def get_bb(self):
         return self.get_body_bb()
