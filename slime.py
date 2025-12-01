@@ -49,7 +49,7 @@ class Slime:
         Slime.images['Run'] = load_image(f'Assets/slime/slime 1/Slime1_Run.png')
         Slime.images['Attack'] = load_image(f'Assets/slime/slime 1/Slime1_Attack.png')
         Slime.images['Death'] = load_image(f'Assets/slime/slime 1/Slime1_Death.png')
-        Slime.images['hurt'] = load_image(f'Assets/slime/slime 1/Slime1_Hurt.png')
+        Slime.images['Hurt'] = load_image(f'Assets/slime/slime 1/Slime1_Hurt.png')
 
     def __init__(self):
         self.x, self.y = start_pos()
@@ -133,6 +133,8 @@ class Slime:
             self.hp -= other.atk - self.defense
             if self.hp <= 0:
                 self.slime_state = 'Death'
+                self.frame = 0
             else:
-                self.slime_state = 'hurt'
+                self.slime_state = 'Hurt'
+                self.frame = 0
                 self.wait_time = get_time()

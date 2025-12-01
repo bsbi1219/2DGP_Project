@@ -49,7 +49,7 @@ class Goblin:
         Goblin.images['Run'] = load_image(f'Assets/goblin/goblin 1/orc1_run.png')
         Goblin.images['Attack'] = load_image(f'Assets/goblin/goblin 1/orc1_attack.png')
         Goblin.images['Death'] = load_image(f'Assets/goblin/goblin 1/orc1_death.png')
-        Goblin.images['hurt'] = load_image(f'Assets/goblin/goblin 1/orc1_hurt.png')
+        Goblin.images['Hurt'] = load_image(f'Assets/goblin/goblin 1/orc1_hurt.png')
 
     def __init__(self):
         self.x, self.y = start_pos()
@@ -74,7 +74,7 @@ class Goblin:
         if self.goblin_state == 'Walk' and get_time() - self.wait_time > 2:
             self.wait_time = get_time()
             self.face_dir = random.randint(1, 4)
-        if self.goblin_state == 'Hurt' and get_time() - self.wait_time > 2:
+        if self.goblin_state == 'Hurt' and get_time() - self.wait_time > 0.5:
             self.goblin_state = 'Walk'
         if self.face_dir == 1:
             self.y -= self.vy * RUN_SPEED_PPS * game_framework.frame_time
@@ -131,6 +131,8 @@ class Goblin:
             self.hp -= other.atk - self.defense
             if self.hp <= 0:
                 self.goblin_state = 'Death'
+                self.frame = 0
             else:
-                self.goblin_state = 'hurt'
+                self.goblin_state = 'Hurt'
+                self.frame = 0
                 self.wait_time = get_time()
