@@ -83,8 +83,6 @@ class Hurt:
             self.height = 64 * 3
         self.hero.hurt_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
-    def get_bb(self):
-        return self.hero.x - 6, self.hero.y - 13, self.hero.x + 6, self.hero.y - 6
 
 class Attack:
     def __init__(self, hero):
@@ -128,8 +126,6 @@ class Attack:
             self.height = 64 * 3
         self.hero.walk_attack_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
-    def get_bb(self):
-        return self.hero.x - 6, self.hero.y - 13, self.hero.x + 6, self.hero.y - 6
 
 class Move:
     def __init__(self, hero):
@@ -161,8 +157,6 @@ class Move:
             self.height = 64 * 3
         self.hero.walk_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
-    def get_bb(self):
-        return self.hero.x - 6, self.hero.y - 13, self.hero.x + 6, self.hero.y - 6
 
 class Idle:
     def __init__(self, hero):
@@ -192,9 +186,6 @@ class Idle:
         elif self.hero.face_dir == 4:
             self.height = 64 * 3
         self.hero.idle_image.clip_draw(int(self.hero.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
-
-    def get_bb(self):
-        return self.hero.x - 6, self.hero.y - 13, self.hero.x + 6, self.hero.y - 6
 
 class Hero:
     def __init__(self):
@@ -230,6 +221,9 @@ class Hero:
             self.ATTACK: {},
             self.HURT: {}
         })
+
+    def get_body_bb(self):
+        return self.x - 6, self.y - 13, self.x + 6, self.y - 6
 
     def update(self):
         vx = 0
@@ -296,7 +290,7 @@ class Hero:
         draw_rectangle(hx1, hy1, hx2, hy2)
 
     def get_bb(self):
-        return self.state_machine.get_bb()
+        return self.get_body_bb()
 
     def handle_collision(self, group, other):
         if group == 'hero:slime' and self.state_machine.cur_state != self.HURT:
