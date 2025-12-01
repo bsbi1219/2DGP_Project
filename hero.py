@@ -41,6 +41,22 @@ TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
+class Death:
+    def __init__(self, hero):
+        self.hero = hero
+
+    def enter(self, e):
+        pass
+
+    def exit(self, e):
+        pass
+
+    def do(self):
+        pass
+
+    def draw(self, sx, sy):
+        pass
+
 class Hurt:
     def __init__(self, hero):
         self.hero = hero
@@ -208,15 +224,18 @@ class Hero:
         self.vy = 0
         self.keys_pressed = set()
 
-        self.max_hp = 500
-        self.hp = 500
+        self.max_hp = 100
+        self.hp = 100
         self.level = 1
         self.exp = 0
         self.next_exp = 20
         self.atk = 20
-        self.defense = 20
+        self.defense = 5
 
         self.gold = 0
+
+        self.dead = False
+        self.death_time = 0
 
         self.idle_image = load_image('Assets/hero/hero_idle.png')
         self.walk_image = load_image('Assets/hero/hero_walk.png')
@@ -236,6 +255,22 @@ class Hero:
             self.ATTACK: {},
             self.HURT: {}
         })
+
+    def get_damage(self, amount):
+        self.hp = self.hp - amount + self.defense
+        if self.hp <= 0 and not self.dead:
+            self.dead = True
+            self.death_time = get_time()
+            self.hp = 0
+            print("HERO DEAD")
+
+    def respawn_hero(self):
+        self.x = 50
+        self.y = 850
+        self.hp = self.max_hp
+        self.state_machine.cur_state = self.IDLE
+        self.dead = False
+        return
 
     def get_gold(self, amount):
         self.gold += amount
@@ -263,6 +298,11 @@ class Hero:
         return None
 
     def update(self):
+        if self.dead:
+            self.vx = 0
+            self.vy = 0
+            if get_time() - self.death_time > 4:
+                self.respawn_hero()
         vx = 0
         vy = 0
         if SDLK_RIGHT in self.keys_pressed:
@@ -309,6 +349,8 @@ class Hero:
         self.state_machine.update()
 
     def handle_event(self, event):
+        if self.dead:
+            return
         if event.type == SDL_KEYDOWN:
             self.keys_pressed.add(event.key)
         elif event.type == SDL_KEYUP:
@@ -342,13 +384,13 @@ class Hero:
             self.state_machine.cur_state.exit(None)
             self.HURT.enter(None)
             self.state_machine.cur_state = self.HURT
-            self.hp -= 50
+            self.get_damage(other.atk)
             self.vx, self.vy = 0, 0
         if group == 'hero_body:goblin' and self.state_machine.cur_state != self.HURT:
             self.state_machine.cur_state.exit(None)
             self.HURT.enter(None)
             self.state_machine.cur_state = self.HURT
-            self.hp -= 50
+            self.get_damage(other.atk)
             self.vx, self.vy = 0, 0
         if group == 'hero_body:wall':
             wall_left, wall_bottom, wall_right, wall_top = other.get_bb()
