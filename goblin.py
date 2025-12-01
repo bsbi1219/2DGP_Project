@@ -74,6 +74,8 @@ class Goblin:
         if self.goblin_state == 'Walk' and get_time() - self.wait_time > 2:
             self.wait_time = get_time()
             self.face_dir = random.randint(1, 4)
+        if self.goblin_state == 'Hurt' and get_time() - self.wait_time > 2:
+            self.goblin_state = 'Walk'
         if self.face_dir == 1:
             self.y -= self.vy * RUN_SPEED_PPS * game_framework.frame_time
         elif self.face_dir == 2:
@@ -122,3 +124,13 @@ class Goblin:
                 self.face_dir = random.randint(1, 2)
             elif self.face_dir == 4:
                 self.face_dir = random.randint(1, 3)
+        if group == 'hero_attack:goblin':
+            if self.goblin_state == 'Hurt':
+                return
+            print("Goblin hit by hero")
+            self.hp -= other.atk - self.defense
+            if self.hp <= 0:
+                self.goblin_state = 'Death'
+            else:
+                self.goblin_state = 'hurt'
+                self.wait_time = get_time()
