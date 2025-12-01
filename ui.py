@@ -2,6 +2,13 @@ from pico2d import *
 import game_framework
 import game_world
 
+def draw_outline_text(font, x, y, text, color, outline_color, thickness=2):
+    for dx in (-thickness, 0, thickness):
+        for dy in (-thickness, 0, thickness):
+            if dx != 0 or dy != 0:
+                font.draw(x + dx, y + dy, text, outline_color)
+    font.draw(x, y, text, color)
+
 class StateUI:
     def __init__(self):
         self.ui_image = load_image('Assets/UI/ui.png')
@@ -9,7 +16,10 @@ class StateUI:
         self.exp_image = load_image('Assets/UI/2 Bars/EnergyBar4.png')
         self.hero_image = load_image('Assets/icon/hero.png')
 
+        self.coin_image = load_image('Assets/icon/icons_01.png')
+
         self.font = load_font('Assets/DNFBitBitv2.otf', 28)
+        self.large_font = load_font('Assets/DNFBitBitv2.otf', 72)
 
     def draw(self):
         hero = game_world.hero
@@ -31,12 +41,12 @@ class StateUI:
         exp_bar_width = int(1280 * exp_ratio)
         self.exp_image.clip_draw(0, 0, exp_bar_width, 14, exp_bar_width / 2, 0, exp_bar_width, 20)
 
-        self.font.draw(160, 90, f'Level: {hero.level}', (255, 255, 255))
-        self.font.draw(20, 930, f'Gold: {hero.gold}G', (255, 255, 255))
+        draw_outline_text(self.font, 160, 90, f'Level: {hero.level}', (255, 255, 255), (0, 0, 0))
+        draw_outline_text(self.font, 70, 930, f'{hero.gold}G', (255, 255, 255), (0, 0, 0))
+        self.coin_image.draw(45, 932, 32, 32)
 
         if hero.dead:
-            self.font.draw(get_canvas_width() // 2 - 120, get_canvas_height() // 2,
-                           "YOU DIED", (255, 0, 0))
+            draw_outline_text(self.large_font, get_canvas_width() // 2 - 180, get_canvas_height() // 2, "YOU DIED", (255, 0, 0), (0, 0, 0))
 
     def update(self):
         pass
