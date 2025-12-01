@@ -79,7 +79,7 @@ class Slime:
             self.slime_state = 'Walk'
         if self.slime_state == 'Death':
             if int(self.frame) >= 9:
-                game_world.hero.add_exp(5)
+                game_world.hero.get_exp(6)
                 game_world.remove_object(self)
             return
         if self.face_dir == 1:
