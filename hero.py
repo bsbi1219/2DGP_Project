@@ -64,12 +64,15 @@ class Hurt:
         self.knockback = 20.0
         self.duration = 5 / FRAMES_PER_ACTION
         self.elapsed = 0.0
+        self.hurt_sound = load_wav('Assets/sound/hero_hurt_sound.wav')
+        self.hurt_sound.set_volume(20)
 
     def enter(self, e):
         self.hero.frame = 0
         self.elapsed = 0.0
         self.hero.x -= self.knockback * self.hero.vx
         self.hero.y -= self.knockback * self.hero.vy
+        self.hurt_sound.play()
 
     def exit(self, e):
         pass
@@ -106,10 +109,13 @@ class Attack:
         self.height = 64 * 3
         self.duration = 0.5
         self.elapsed = 0.0
+        self.attack_sound = load_wav('Assets/sound/knife_sound.wav')
+        self.attack_sound.set_volume(20)
 
     def enter(self, e):
         self.hero.frame = 0
         self.elapsed = 0.0
+        self.attack_sound.play()
 
     def exit(self, e):
         pass
@@ -158,12 +164,14 @@ class Move:
     def __init__(self, hero):
         self.hero = hero
         self.height = 64 * 3
+        self.walk_sound = load_music('Assets/sound/walk_sound.mp3')
+        self.walk_sound.set_volume(10)
 
     def enter(self, e):
-        pass
+        self.walk_sound.repeat_play()
 
     def exit(self, e):
-        pass
+        self.walk_sound.stop()
 
     def do(self):
         ft = game_framework.frame_time
@@ -224,7 +232,7 @@ class Hero:
         self.vy = 0
         self.keys_pressed = set()
 
-        self.max_hp = 100
+        self.max_hp = 200
         self.hp = 200
         self.level = 1
         self.exp = 0
