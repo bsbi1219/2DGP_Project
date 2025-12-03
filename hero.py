@@ -306,6 +306,17 @@ class Hero:
         return None
 
     def update(self):
+        left, bottom, right, top = self.get_bb()
+
+        if left < 0:
+            self.x += -left
+        if right > 1280:
+            self.x -= (right - 1280)
+        if bottom < 0:
+            self.y += -bottom
+        if top > 960:
+            self.y -= (top - 960)
+
         if self.dead:
             self.vx = 0
             self.vy = 0
