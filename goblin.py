@@ -200,7 +200,6 @@ class Goblin:
 
     def handle_collision(self, group, other):
         if group == 'goblin:wall':
-            print("goblin hit wall")
             self.x = self.prev_x
             self.y = self.prev_y
             if self.face_dir == 1:
@@ -216,7 +215,6 @@ class Goblin:
                 return
             if self.damage_cool > 0:
                 return
-            print("Goblin hit by hero")
             self.hp -= other.atk - self.defense
             self.damage_cool = 0.2
             if self.hp <= 0:

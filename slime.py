@@ -190,7 +190,6 @@ class Slime:
 
     def handle_collision(self, group, other):
         if group == 'slime:wall':
-            print("slime hit wall")
             self.x = self.prev_x
             self.y = self.prev_y
             if self.face_dir == 1:
@@ -206,7 +205,6 @@ class Slime:
                 return
             if self.damage_cool > 0:
                 return
-            print("slime hit by hero")
             self.hp = self.hp - other.atk + self.defense
             self.damage_cool = 0.2
             if self.hp <= 0:

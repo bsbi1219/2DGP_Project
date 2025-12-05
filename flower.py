@@ -180,7 +180,6 @@ class Flower:
                 return
             if self.damage_cool > 0:
                 return
-            print("flower hit by hero")
             self.hp = self.hp - other.atk + self.defense
             self.damage_cool = 0.2
             if self.hp <= 0:
