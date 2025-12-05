@@ -18,6 +18,7 @@ class StateUI:
 
         self.coin_image = load_image('Assets/icon/icons_01.png')
 
+        self.small_font = load_font('Assets/DNFBitBitv2.otf', 16)
         self.font = load_font('Assets/DNFBitBitv2.otf', 28)
         self.large_font = load_font('Assets/DNFBitBitv2.otf', 72)
 
@@ -44,6 +45,8 @@ class StateUI:
         draw_outline_text(self.font, 160, 90, f'Level: {hero.level}', (255, 255, 255), (0, 0, 0))
         draw_outline_text(self.font, 70, 930, f'{hero.gold}G', (255, 255, 255), (0, 0, 0))
         self.coin_image.draw(45, 932, 32, 32)
+
+        draw_outline_text(self.small_font, 1150, 40, f'EXP : {hero.exp}/{hero.next_exp}', (255, 255, 255), (0, 0, 0))
 
         if hero.dead:
             draw_outline_text(self.large_font, get_canvas_width() // 2 - 180, get_canvas_height() // 2, "YOU DIED", (255, 0, 0), (0, 0, 0))
