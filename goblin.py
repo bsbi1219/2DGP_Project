@@ -184,7 +184,13 @@ class Goblin:
     def get_bb(self):
         if self.goblin_state == 'Attack':
             if self.face_dir == 1:
-                return self.x - 8, self.y - 18, self.x + 8, self.y + 5
+                return self.x - 19, self.y - 18, self.x + 19, self.y + 5
+            if self.face_dir == 2:
+                return self.x - 19, self.y - 5, self.x + 19, self.y + 18
+            if self.face_dir == 3:
+                return self.x - 23, self.y - 15, self.x + 5, self.y + 13
+            if self.face_dir == 4:
+                return self.x - 5, self.y - 15, self.x + 23, self.y + 13
         return self.x - 8, self.y - 8, self.x + 8, self.y + 5
 
     def handle_event(self, event):
