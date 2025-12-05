@@ -75,7 +75,7 @@ class Flower:
     def near_by_hero(self):
         hero = game_world.hero
         distance = ((self.x - hero.x) ** 2 + (self.y - hero.y) ** 2) ** 0.5
-        if distance < 23:
+        if distance < 40:
             return 'attack'
         if distance < 100:
             return 'near'
@@ -161,8 +161,15 @@ class Flower:
 
     def get_bb(self):
         if self.flower_state == 'Attack':
-            return self.x - 17, self.y - 6, self.x + 17, self.y + 15
-        return self.x - 6, self.y - 4, self.x + 6, self.y + 4
+            if self.face_dir == 1:
+                return self.x - 13, self.y - 15, self.x + 13, self.y + 10
+            elif self.face_dir == 2:
+                return self.x - 13, self.y - 10, self.x + 13, self.y + 16
+            elif self.face_dir == 3:
+                return self.x - 19, self.y - 10, self.x + 17, self.y + 14
+            elif self.face_dir == 4:
+                return self.x - 17, self.y - 10, self.x + 19, self.y + 14
+        return self.x - 6, self.y - 12, self.x + 6, self.y - 5
 
     def handle_event(self, event):
         pass

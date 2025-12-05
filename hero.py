@@ -272,6 +272,8 @@ class Hero:
             self.death_time = get_time()
             self.hp = 0
             self.death_count += 1
+            self.vx = 0
+            self.vy = 0
             print("HERO DEAD")
 
     def respawn_hero(self):
@@ -413,6 +415,12 @@ class Hero:
             self.state_machine.cur_state = self.HURT
             self.get_damage(other.atk)
             self.vx, self.vy = 0, 0
+        if group == 'hero_body:flower' and self.state_machine.cur_state != self.HURT:
+            self.state_machine.cur_state.exit(None)
+            self.HURT.enter(None)
+            self.state_machine.cur_state = self.HURT
+            self.get_damage(other.atk)
+            self.vx, self.vy = 0, 0
         if group == 'hero_body:wall':
             wall_left, wall_bottom, wall_right, wall_top = other.get_bb()
             hero_left, hero_bottom, hero_right, hero_top = self.get_bb()
@@ -437,4 +445,6 @@ class Hero:
         if group == 'hero_attack:slime':
             pass
         if group == 'hero_attack:goblin':
+            pass
+        if group == 'hero_attack:flower':
             pass
