@@ -43,6 +43,7 @@ def start_pos(box_x=6, box_y=4):
 
 class Slime:
     images = {}
+    font = None
 
     def load_images(self):
         Slime.images['Walk'] = load_image(f'Assets/slime/slime 1/Slime1_Walk.png')
@@ -50,6 +51,8 @@ class Slime:
         Slime.images['Attack'] = load_image(f'Assets/slime/slime 1/Slime1_Attack.png')
         Slime.images['Death'] = load_image(f'Assets/slime/slime 1/Slime1_Death.png')
         Slime.images['Hurt'] = load_image(f'Assets/slime/slime 1/Slime1_Hurt.png')
+        if Slime.font is None:
+            Slime.font = load_font('Assets/DNFBitBitv2.otf', 16)
 
     def __init__(self):
         self.x, self.y = start_pos()
@@ -67,19 +70,25 @@ class Slime:
         self.defense = 0
         self.slime_state = 'Walk'
         self.frame_num = 8
+        self.damage_cool = 0
 
     def near_by_hero(self):
         hero = game_world.hero
         distance = ((self.x - hero.x) ** 2 + (self.y - hero.y) ** 2) ** 0.5
-        if distance < 20:
+        if distance < 23:
             return 'attack'
         elif distance < 100:
             return 'run'
+        else:
+            return 'none'
 
     def update(self):
         self.prev_x = self.x
         self.prev_y = self.y
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.frame_num
+
+        if self.damage_cool > 0:
+            self.damage_cool -= game_framework.frame_time
 
         if self.slime_state == 'Walk' and get_time() - self.wait_time > 2:
             self.wait_time = get_time()
@@ -94,6 +103,8 @@ class Slime:
 
         if self.slime_state == 'Hurt' and get_time() - self.wait_time > 0.5:
             self.slime_state = 'Walk'
+            self.vx = 1
+            self.vy = 1
 
         if self.slime_state == 'Death':
             if int(self.frame) >= 9:
@@ -102,7 +113,22 @@ class Slime:
                 game_world.remove_object(self)
             return
 
+        if self.near_by_hero() == 'run' and self.slime_state != 'Run' and self.slime_state != 'Attack' and self.slime_state != 'Hurt':
+            self.slime_state = 'Run'
+            self.frame_num = 8
+            self.vx = 1
+            self.vy = 1
+        elif self.near_by_hero() == 'attack' and self.slime_state != 'Attack' and self.slime_state != 'Hurt':
+            self.slime_state = 'Attack'
+            self.frame_num = 8
+            self.frame = 0
+            self.vx = 0
+            self.vy = 0
+
         if self.slime_state == 'Run':
+            if self.near_by_hero() == 'none':
+                self.slime_state = 'Walk'
+                self.frame_num = 8
             hero = game_world.hero
             dx = hero.x - self.x
             dy = hero.y - self.y
@@ -111,16 +137,6 @@ class Slime:
                 self.face_dir = 4 if dx > 0 else 3
             else:
                 self.face_dir = 2 if dy > 0 else 1
-
-        if self.near_by_hero() == 'run' and self.slime_state != 'Run' and self.slime_state != 'Attack':
-            self.slime_state = 'Run'
-            self.frame_num = 8
-        elif self.near_by_hero() == 'attack' and self.slime_state != 'Attack':
-            self.slime_state = 'Attack'
-            self.frame_num = 8
-            self.frame = 0
-            self.vx = 0
-            self.vy = 0
 
         if self.face_dir == 1:
             self.y -= self.vy * RUN_SPEED_PPS * game_framework.frame_time
@@ -145,6 +161,9 @@ class Slime:
         elif self.face_dir == 4:
             self.height = 0
         Slime.images[self.slime_state].clip_draw(int(self.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
+
+        hp_text = f"{self.hp}/150"
+        Slime.font.draw(sx - 33, sy + 30, hp_text, (255, 255, 255))
 
         hx1, hy1, hx2, hy2 = self.get_bb()
         hx1, hy1 = cam.world_to_screen(hx1, hy1)
@@ -175,16 +194,19 @@ class Slime:
         if group == 'hero_attack:slime':
             if self.slime_state == 'Hurt':
                 return
+            if self.damage_cool > 0:
+                return
             print("slime hit by hero")
             self.hp = self.hp - other.atk + self.defense
+            self.damage_cool = 0.2
             if self.hp <= 0:
                 self.slime_state = 'Death'
                 self.frame = 0
                 self.frame_num = 10
             else:
                 self.slime_state = 'Hurt'
-                self.x -= self.vx * 3
-                self.y -= self.vy * 3
+                # self.x -= self.vx * 3
+                # self.y -= self.vy * 3
                 self.frame = 0
                 self.frame_num = 5
                 self.wait_time = get_time()
