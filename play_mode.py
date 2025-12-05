@@ -10,6 +10,7 @@ from slime import Slime
 from goblin import Goblin
 from flower import Flower
 from wall import Wall
+from interact import InteractZone
 import ui
 
 hero = None
@@ -40,6 +41,15 @@ def init():
     map = Map()
     game_world.add_object(map, 0)
     game_world.map = map
+
+    game_world.interacts = [
+        InteractZone(89, 665, 40, 40, "'보스방 열쇠'를 얻었다!"),
+        InteractZone(1148, 301, 41.88, 22.38, "상자를 열었다. 30G를 얻었다!"),
+        InteractZone(619.63, 925.50, 41.13, 33.63, "수상자를 열었다. 70G를 얻었다!"),
+        InteractZone(1137.82, 91.45, 55.82, 49.82, "수상한 인형을 발견했다... 조금 강해진 기분이다.")
+    ]
+    for iz in game_world.interacts:
+        game_world.add_object(iz, 1)
 
     # 슬라임
     game_world.add_collision_pair('slime:wall', None, None)
