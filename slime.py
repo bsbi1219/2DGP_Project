@@ -20,11 +20,12 @@ def start_pos(box_x=6, box_y=4):
     m = game_world.map
     max_x = m.map_width - 1
     max_y = m.map_height - 1
-
+    hero = game_world.hero
     # 충돌박스와 겹치지 않는 위치 찾기
     while True:
         x = random.randint(0, max_x)
         y = random.randint(0, max_y)
+        dist = ((x - hero.x) ** 2 + (y - hero.y) ** 2) ** 0.5
 
         left = x - box_x
         right = x + box_x
@@ -38,7 +39,7 @@ def start_pos(box_x=6, box_y=4):
                 lap = True
                 break
 
-        if not lap:
+        if not lap and dist > 100:
             return x, y
 
 class Slime:
@@ -111,6 +112,11 @@ class Slime:
                 game_world.hero.get_exp(6)
                 game_world.hero.get_gold(5)
                 game_world.remove_object(self)
+
+                new = Slime()
+                new.x, new.y = start_pos()
+                game_world.add_object(new, 1)
+                return
             return
 
         if self.near_by_hero() == 'run' and self.slime_state != 'Run' and self.slime_state != 'Attack' and self.slime_state != 'Hurt':
