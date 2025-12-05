@@ -244,6 +244,7 @@ class Hero:
 
         self.dead = False
         self.death_time = 0
+        self.death_count = 0
 
         self.idle_image = load_image('Assets/hero/hero_idle.png')
         self.walk_image = load_image('Assets/hero/hero_walk.png')
@@ -270,6 +271,7 @@ class Hero:
             self.dead = True
             self.death_time = get_time()
             self.hp = 0
+            self.death_count += 1
             print("HERO DEAD")
 
     def respawn_hero(self):
