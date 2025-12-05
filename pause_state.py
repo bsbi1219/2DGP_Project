@@ -2,11 +2,11 @@ from pico2d import *
 import game_framework
 import game_world
 
-pause_image = None
+font = None
 
 def init():
-    global pause_image
-    pause_image = load_image('Assets/UI/pause_ui.png')
+    global font
+    font = load_font('Assets/DNFBitBitv2.otf', 70)
 
 def handle_events():
     events = get_events()
@@ -19,9 +19,8 @@ def update():
 
 def draw():
     game_world.render()
-
-    pause_image.draw(1280, 960)
-    pass
+    sx, sy = game_world.camera.world_to_screen(640, 480)
+    font.draw(sx - 140, sy, "일시정지", (255, 255, 255))
 
 def pause():
     pass
