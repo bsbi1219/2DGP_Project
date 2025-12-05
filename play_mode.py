@@ -8,6 +8,7 @@ from map_1 import Map
 from camera import Camera
 from slime import Slime
 from goblin import Goblin
+from flower import Flower
 from wall import Wall
 import ui
 
@@ -54,6 +55,10 @@ def init():
     for goblin in goblins:
         game_world.add_collision_pair('goblin:wall', goblin, None)
 
+    # 식인꽃
+    flowers = [Flower() for _ in range(20)]
+    game_world.add_objects(flowers, 1)
+
     # Hero와 충돌 처리
     game_world.add_collision_pair('hero_body:slime', hero, None)
     game_world.add_collision_pair('hero_attack:slime', hero, None)
@@ -66,6 +71,12 @@ def init():
     for goblin in goblins:
         game_world.add_collision_pair('hero_body:goblin', None, goblin)
         game_world.add_collision_pair('hero_attack:goblin', None, goblin)
+
+    game_world.add_collision_pair('hero_body:flower', hero, None)
+    game_world.add_collision_pair('hero_attack:flower', hero, None)
+    for flower in flowers:
+        game_world.add_collision_pair('hero_body:flower', None, flower)
+        game_world.add_collision_pair('hero_attack:flower', None, flower)
 
     # 벽과 충돌 처리
     game_world.add_collision_pair('hero_body:wall', hero, None)
