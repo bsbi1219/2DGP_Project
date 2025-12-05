@@ -110,7 +110,7 @@ class Goblin:
             self.vy = 1
 
         if self.goblin_state == 'Death':
-            if int(self.frame) >= 8:
+            if int(self.frame) >= 7:
                 game_world.hero.get_exp(8)
                 game_world.hero.get_gold(10)
                 game_world.remove_object(self)
