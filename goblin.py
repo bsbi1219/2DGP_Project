@@ -98,17 +98,19 @@ class Goblin:
         if self.goblin_state == 'Attack' and int(self.frame) >= 7:
             self.goblin_state = 'Walk'
             self.frame = 0
-            self.frame_num = 8
+            self.frame_num = 6
             self.vx = 1
             self.vy = 1
 
         if self.goblin_state == 'Hurt' and get_time() - self.wait_time > 0.5:
             self.goblin_state = 'Walk'
+            self.frame = 0
+            self.frame_num = 6
             self.vx = 1
             self.vy = 1
 
         if self.goblin_state == 'Death':
-            if int(self.frame) >= 7:
+            if int(self.frame) >= 8:
                 game_world.hero.get_exp(8)
                 game_world.hero.get_gold(10)
                 game_world.remove_object(self)
@@ -138,7 +140,7 @@ class Goblin:
         if self.goblin_state == 'Run':
             if self.near_by_hero() == 'none':
                 self.goblin_state = 'Walk'
-                self.frame_num = 8
+                self.frame_num = 6
             hero = game_world.hero
             dx = hero.x - self.x
             dy = hero.y - self.y
