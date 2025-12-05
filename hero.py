@@ -241,6 +241,8 @@ class Hero:
         self.defense = 5
 
         self.gold = 0
+        self.item_boss_key = False
+        self.item_potion_count = 0
 
         self.dead = False
         self.death_time = 0
@@ -300,6 +302,22 @@ class Hero:
 
     def get_gold(self, amount):
         self.gold += amount
+
+    def get_atk(self, amount):
+        self.atk += amount
+
+    def get_defense(self, amount):
+        self.defense += amount
+
+    def get_hp(self, amount):
+        self.max_hp += amount
+        self.hp += amount
+
+    def get_potion(self):
+        self.item_potion_count += 1
+
+    def get_key(self):
+        self.item_boss_key = True
 
     def get_exp(self, amount):
         self.exp += amount
