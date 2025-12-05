@@ -21,7 +21,7 @@ def start_pos(box_x=6, box_y=4):
     max_x = m.map_width - 1
     max_y = m.map_height - 1
     hero = game_world.hero
-    # 충돌박스와 겹치지 않는 위치 찾기
+
     while True:
         x = random.randint(0, max_x)
         y = random.randint(0, max_y)
@@ -116,8 +116,11 @@ class Slime:
                 new = Slime()
                 new.x, new.y = start_pos()
                 game_world.add_object(new, 1)
+
+                game_world.add_collision_pair('hero_body:slime', None, new)
+                game_world.add_collision_pair('hero_attack:slime', None, new)
+                game_world.add_collision_pair('slime:wall', new, None)
                 print("슬라임 리스폰")
-                return
             return
 
         if self.near_by_hero() == 'run' and self.slime_state != 'Run' and self.slime_state != 'Attack' and self.slime_state != 'Hurt':
@@ -199,7 +202,7 @@ class Slime:
             elif self.face_dir == 4:
                 self.face_dir = random.randint(1, 3)
         if group == 'hero_attack:slime':
-            if self.slime_state == 'Hurt':
+            if self.slime_state == 'Hurt' or self.slime_state == 'Death':
                 return
             if self.damage_cool > 0:
                 return
@@ -212,8 +215,6 @@ class Slime:
                 self.frame_num = 10
             else:
                 self.slime_state = 'Hurt'
-                # self.x -= self.vx * 3
-                # self.y -= self.vy * 3
                 self.frame = 0
                 self.frame_num = 5
                 self.wait_time = get_time()
