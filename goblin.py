@@ -76,7 +76,7 @@ class Goblin:
     def near_by_hero(self):
         hero = game_world.hero
         distance = ((self.x - hero.x) ** 2 + (self.y - hero.y) ** 2) ** 0.5
-        if distance < 23:
+        if distance < 28:
             return 'attack'
         elif distance < 100:
             return 'run'
