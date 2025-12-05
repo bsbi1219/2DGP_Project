@@ -8,8 +8,9 @@ ui = None
 message = ""
 
 def init():
-    global font
-    font = load_font("Assets/DNFBitBitv2.otf", 20)
+    global font, ui
+    font = load_font("Assets/DNFBitBitv2.otf", 30)
+    ui = load_image("Assets/UI/message_ui.png")
 
 def set_message(text):
     global message
@@ -28,8 +29,8 @@ def update():
 def draw():
     import game_world
     game_world.render()
-    font.draw(100, 300, message, (255, 255, 255))
-    # 캔버스를 업데이트해 화면에 표시
+    ui.draw(640, 480)
+    font.draw(90, 200, message, (0, 0, 0))
     update_canvas()
 
 def pause():
