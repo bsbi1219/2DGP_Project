@@ -116,6 +116,7 @@ class Slime:
                 new = Slime()
                 new.x, new.y = start_pos()
                 game_world.add_object(new, 1)
+                print("슬라임 리스폰")
                 return
             return
 
