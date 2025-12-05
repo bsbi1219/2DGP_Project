@@ -19,7 +19,6 @@ def update():
 
 def draw():
     game_world.render()
-    draw_rectangle(0, 0, 1280, 960, (0, 0, 0, 150))
 
     pause_image.draw(1280, 960)
     pass
