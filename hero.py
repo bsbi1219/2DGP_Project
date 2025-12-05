@@ -265,6 +265,18 @@ class Hero:
             self.HURT: {}
         })
 
+    def try_interact(self):
+        hl, hb, hr, ht = self.get_bb()
+        print("HERO:", self.x, self.y)
+        for iz in game_world.interacts:
+            print("ZONE:", iz.get_bb())
+
+        for iz in game_world.interacts:
+            l, b, r, t = iz.get_bb()
+            if not (hr < l or hl > r or ht < b or hb > t):
+                iz.interact()
+                return
+
     def get_damage(self, amount):
         self.hp = self.hp - amount + self.defense
         if self.hp <= 0 and not self.dead:
@@ -373,6 +385,9 @@ class Hero:
 
     def handle_event(self, event):
         if self.dead:
+            return
+        if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            self.try_interact()
             return
         if event.type == SDL_KEYDOWN:
             self.keys_pressed.add(event.key)
