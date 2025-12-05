@@ -42,6 +42,9 @@ class StateUI:
         exp_bar_width = int(1280 * exp_ratio)
         self.exp_image.clip_draw(0, 0, exp_bar_width, 14, exp_bar_width / 2, 0, exp_bar_width, 20)
 
+        draw_outline_text(self.small_font, 390, 105, f'ATK +{hero.atk}', (255, 255, 255), (0, 0, 0))
+        draw_outline_text(self.small_font, 390, 85, f'DEF +{hero.defense}', (255, 255, 255), (0, 0, 0))
+
         draw_outline_text(self.font, 160, 90, f'Level: {hero.level}', (255, 255, 255), (0, 0, 0))
         draw_outline_text(self.font, 70, 930, f'{hero.gold}G', (255, 255, 255), (0, 0, 0))
         self.coin_image.draw(45, 932, 32, 32)
