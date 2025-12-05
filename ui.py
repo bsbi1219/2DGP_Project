@@ -47,6 +47,7 @@ class StateUI:
 
         if hero.dead:
             draw_outline_text(self.large_font, get_canvas_width() // 2 - 180, get_canvas_height() // 2, "YOU DIED", (255, 0, 0), (0, 0, 0))
+            draw_outline_text(self.font, get_canvas_width() // 2 - 180, get_canvas_height() // 2 - 50, f'사망 횟수 : {hero.death_count}',(255, 255, 255), (0, 0, 0))
 
     def update(self):
         pass
