@@ -93,6 +93,16 @@ class Goblin:
             self.x += self.vx * RUN_SPEED_PPS * game_framework.frame_time
         pass
 
+    def near_by_hero(self):
+        hero = game_world.hero
+        distance = ((self.x - hero.x) ** 2 + (self.y - hero.y) ** 2) ** 0.5
+        if distance < 23:
+            return 'attack'
+        elif distance < 100:
+            return 'run'
+        else:
+            return 'none'
+
     def draw(self):
         cam = game_world.camera
         sx, sy = cam.world_to_screen(self.x, self.y)
