@@ -246,6 +246,8 @@ class Hero:
         self.death_time = 0
         self.death_count = 0
 
+        self.muzuk = False
+
         self.idle_image = load_image('Assets/hero/hero_idle.png')
         self.walk_image = load_image('Assets/hero/hero_walk.png')
         self.walk_attack_image = load_image('Assets/hero/hero_walk_attack.png')
@@ -390,6 +392,11 @@ class Hero:
             self.try_interact()
             return
         if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_i:
+                self.muzuk = not self.muzuk
+                print("무적 모드:", self.muzuk)
+                return
+        if event.type == SDL_KEYDOWN:
             self.keys_pressed.add(event.key)
         elif event.type == SDL_KEYUP:
             self.keys_pressed.discard(event.key)
@@ -419,24 +426,32 @@ class Hero:
 
     def handle_collision(self, group, other):
         if group == 'hero_body:slime' and self.state_machine.cur_state != self.HURT:
+            if self.muzuk:
+                return
             self.state_machine.cur_state.exit(None)
             self.HURT.enter(None)
             self.state_machine.cur_state = self.HURT
             self.get_damage(other.atk)
             self.vx, self.vy = 0, 0
         if group == 'hero_body:goblin' and self.state_machine.cur_state != self.HURT:
+            if self.muzuk:
+                return
             self.state_machine.cur_state.exit(None)
             self.HURT.enter(None)
             self.state_machine.cur_state = self.HURT
             self.get_damage(other.atk)
             self.vx, self.vy = 0, 0
         if group == 'hero_body:flower' and self.state_machine.cur_state != self.HURT:
+            if self.muzuk:
+                return
             self.state_machine.cur_state.exit(None)
             self.HURT.enter(None)
             self.state_machine.cur_state = self.HURT
             self.get_damage(other.atk)
             self.vx, self.vy = 0, 0
         if group == 'hero_body:wall':
+            if self.muzuk:
+                return
             wall_left, wall_bottom, wall_right, wall_top = other.get_bb()
             hero_left, hero_bottom, hero_right, hero_top = self.get_bb()
 
