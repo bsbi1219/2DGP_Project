@@ -23,6 +23,9 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
                 game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
+            import pause_state
+            game_framework.push_mode(pause_state)
         else:
             hero.handle_event(event)
 
