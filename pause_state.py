@@ -5,7 +5,8 @@ import game_world
 pause_image = None
 
 def init():
-    pass
+    global pause_image
+    pause_image = load_image('Assets/UI/pause_ui.png')
 
 def handle_events():
     events = get_events()
@@ -17,6 +18,10 @@ def update():
     pass
 
 def draw():
+    game_world.render()
+    draw_rectangle(0, 0, 1280, 960, (0, 0, 0, 150))
+
+    pause_image.draw(1280, 960)
     pass
 
 def pause():
