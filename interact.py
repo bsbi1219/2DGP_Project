@@ -4,12 +4,15 @@ import game_world
 import dialogue_state
 
 class InteractZone:
-    def __init__(self, x, y, width, height, message="상호작용"):
+    def __init__(self, x, y, width, height, message="상호작용", after_message=None, give_item=None):
         self.x = x
         self.y = y
         self.w = width
         self.h = height
         self.message = message
+        self.after_message = after_message
+        self.give_item = give_item
+        self.visited = False
 
     def get_bb(self):
         left = self.x - self.w // 2
@@ -19,8 +22,17 @@ class InteractZone:
         return left, bottom, right, top
 
     def interact(self):
-        # 상호작용 시 대화창 띄우기
-        dialogue_state.set_message(self.message)
+        if not self.visited:
+            dialogue_state.set_message(self.message)
+            if self.give_item:
+                self.give_item()
+            self.visited = True
+        else:
+            if self.after_message:
+                dialogue_state.set_message(self.after_message)
+            else:
+                dialogue_state.set_message(self.message)
+
         game_framework.push_mode(dialogue_state)
 
     def draw(self):
