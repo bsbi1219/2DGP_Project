@@ -43,10 +43,10 @@ def init():
     game_world.map = map
 
     game_world.interacts = [
-        InteractZone(89, 665, 40, 40, "'보스방 열쇠'를 얻었다!"),
-        InteractZone(1148, 301, 41.88, 22.38, "상자를 열었다. 30G를 얻었다!"),
-        InteractZone(619.63, 925.50, 41.13, 33.63, "수상자를 열었다. 70G를 얻었다!"),
-        InteractZone(1137.82, 91.45, 55.82, 49.82, "수상한 인형을 발견했다... 조금 강해진 기분이다.")
+        InteractZone(89, 655, 30, 50, "'보스방 열쇠'를 얻었다!", after_message="이미 얻은 열쇠이다.", give_item=lambda:hero.get_key()),
+        InteractZone(1170, 661, 35, 45, "상자를 열었다. 30G를 얻었다!", after_message="상자는 비어있다.", give_item=lambda:hero.get_gold(30)),
+        InteractZone(640, 20, 40, 30, "상자를 열었다. 70G를 얻었다!", after_message="상자는 비어있다.", give_item=lambda:hero.get_gold(70)),
+        InteractZone(1164, 845, 40, 40, "수상한 인형을 발견했다... 조금 강해진 기분이다.", after_message="평범한 인형이다.", give_item=lambda:hero.get_atk(10))
     ]
     for iz in game_world.interacts:
         game_world.add_object(iz, 1)
