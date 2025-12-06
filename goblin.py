@@ -200,8 +200,18 @@ class Goblin:
 
     def handle_collision(self, group, other):
         if group == 'goblin:wall':
-            self.x = self.prev_x
-            self.y = self.prev_y
+            if self.face_dir == 1:  # down
+                self.y = self.prev_y
+            elif self.face_dir == 2:  # up
+                self.y = self.prev_y
+            elif self.face_dir == 3:  # left
+                self.x = self.prev_x
+            elif self.face_dir == 4:  # right
+                self.x = self.prev_x
+
+            if self.goblin_state == 'Run':
+                return
+
             if self.face_dir == 1:
                 self.face_dir = random.randint(2, 4)
             elif self.face_dir == 2:
