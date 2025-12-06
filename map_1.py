@@ -15,7 +15,6 @@ def f_read(filename, map_list):
 class Map:
     def __init__(self):
         from pico2d import load_image
-        import csv
         self.floor_image = load_image('Assets/dungeon/walls_floor.png')
         self.wall_image = load_image('Assets/dungeon/walls_floor.png')
         self.object_cave_image = load_image('Assets/objects/Cave_objects_source.png')

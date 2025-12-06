@@ -9,7 +9,7 @@ def f_read(filename, map_list):
             map_list.append([int(x) for x in row])
 
 
-class Map:
+class Map2:
     def __init__(self):
         from pico2d import load_image
         self.floor_wall_image = load_image('Assets/dungeon/walls_floor.png')
@@ -23,9 +23,9 @@ class Map:
         self.collision_rects = []
 
         f_read('csv/맵 2번_바닥.csv', self.map_2_floor)
-        f_read('csv/맵 1번_벽.csv', self.map_2_wall)
-        f_read('csv/맵 1번_동굴 오브젝트.csv', self.map_2_object_cave)
-        f_read('csv/맵 1번_거미줄.csv', self.map_2_object_wep)
+        f_read('csv/맵 2번_벽.csv', self.map_2_wall)
+        f_read('csv/맵 2번_동굴 오브젝트.csv', self.map_2_object_cave)
+        f_read('csv/맵 2번_거미줄.csv', self.map_2_object_wep)
 
         if len(self.map_2_floor) == 0:
             raise Exception("맵 바닥 CSV를 읽지 못했음")
