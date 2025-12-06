@@ -134,3 +134,22 @@ class StoreUI:
 
     def finish(self):
         pass
+
+
+class BossHPUI:
+    def __init__(self):
+        self.hp_back = load_image('Assets/UI/hp_back.png')
+        self.hp_front = load_image('Assets/UI/hp_front.png')
+        self.font = load_font('Assets/DNFBitBitv2.otf', 20)
+
+    def draw(self):
+        boss = game_world.boss
+
+        self.hp_back.draw(640, 480)
+        hp_ratio = boss.hp / boss.max_hp
+        clip_width = int(32 * hp_ratio)
+        draw_width = int(600 * hp_ratio)
+        self.hp_front.clip_draw(0, 0, clip_width, 14, 640, 950, draw_width, 32)
+
+    def update(self):
+        pass
