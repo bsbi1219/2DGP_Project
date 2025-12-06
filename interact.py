@@ -4,7 +4,7 @@ import game_world
 import dialogue_state
 
 class InteractZone:
-    def __init__(self, x, y, width, height, message="상호작용", after_message=None, give_item=None):
+    def __init__(self, x, y, width, height, message="상호작용", after_message=None, give_item=None, open_store=False):
         self.x = x
         self.y = y
         self.w = width
@@ -12,6 +12,7 @@ class InteractZone:
         self.message = message
         self.after_message = after_message
         self.give_item = give_item
+        self.open_store = open_store
         self.visited = False
 
     def get_bb(self):
@@ -22,6 +23,10 @@ class InteractZone:
         return left, bottom, right, top
 
     def interact(self):
+        if self.open_store:
+            import ui
+            game_framework.push_mode(ui.StoreUI())
+            return
         if not self.visited:
             dialogue_state.set_message(self.message)
             if self.give_item:
