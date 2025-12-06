@@ -25,12 +25,13 @@ class Boss:
         Boss.images['Run'] = load_image("Assets/Boss/boss_Run.png")
         Boss.images['Attack'] = load_image("Assets/Boss/boss_Attack.png")
         Boss.images['Death'] = load_image("Assets/Boss/boss_Death.png")
+        Boss.images['BeforeDeath'] = load_image("Assets/Boss/boss_Idle.png")
         Boss.images['Hurt'] = load_image("Assets/Boss/boss_Hurt.png")
         Boss.images['Skill'] = load_image(f'Assets/Boss/boss_Idle.png')
         Boss.images['Text'] = load_image(f'Assets/Boss/boss_Idle.png')
 
     def __init__(self):
-        self.x, self.y = 640, 640
+        self.x, self.y = 640, 540
         self.prev_x = self.x
         self.prev_y = self.y
         self.face_dir = 1
@@ -44,49 +45,87 @@ class Boss:
         self.height = 64 * 3
         self.max_hp = 2000
         self.hp = 2000
-        self.atk = 20
-        self.defense = 0
+        self.atk = 40
+        self.defense = 20
         self.boss_state = 'Idle'
         self.frame_num = 4
         self.damage_cool = 0
 
         self.battle_started = False
 
-        # 스킬 관련
-        self.lightning_cool = 0
-        self.lightning_ready = False
-
         # 고블린 소환
-        self.summon_cool = 0
+        self.summon_cool = 1000
+        self.summon_started = False
 
         # 대사 관련
         self.used_half_hp_text = False
         self.used_intro_text = False
 
+        self.death_dialogue_done = False
+
     def start_battle(self):
         self.battle_started = True
 
     def get_bb(self):
-        left = self.x - 30
-        bottom = self.y - 30
-        right = self.x + 30
-        top = self.y + 30
+        if self.boss_state == 'Attack' and int(self.frame) >= 8:
+            if self.face_dir == 1:
+                left = self.x - 20
+                bottom = self.y - 45
+                right = self.x + 20
+                top = self.y
+            elif self.face_dir == 2:
+                left = self.x - 20
+                bottom = self.y - 20
+                right = self.x + 20
+                top = self.y + 25
+            elif self.face_dir == 3:
+                left = self.x - 35
+                bottom = self.y - 20
+                right = self.x + 25
+                top = self.y
+            elif self.face_dir == 4:
+                left = self.x - 25
+                bottom = self.y - 20
+                right = self.x + 35
+                top = self.y
+        else:
+            if self.face_dir == 1 or self.face_dir == 2:
+                left = self.x - 20
+                bottom = self.y - 20
+                right = self.x + 20
+                top = self.y
+            elif self.face_dir == 3:
+                left = self.x - 15
+                bottom = self.y - 20
+                right = self.x + 25
+                top = self.y
+            elif self.face_dir == 4:
+                left = self.x - 25
+                bottom = self.y - 20
+                right = self.x + 15
+                top = self.y
         return left, bottom, right, top
 
-    def take_damage(self, amount):
-        self.health -= amount
-        if self.health <= 0:
-            self.die()
+    def near_by_hero(self):
+        hero = game_world.hero
+        distance = ((self.x - hero.x) ** 2 + (self.y - hero.y) ** 2) ** 0.5
+        if distance < 30:
+            return 'Attack'
+        else:
+            return 'Run'
 
-    def die(self):
-        game_world.remove_object(self)
-        # 추가적인 보스 사망 처리 로직 (예: 아이템 드랍, 게임 승리 등)
+    def go_to_clear(self):
+        import game_clear_state
+        game_framework.change_mode(game_clear_state)
 
     def update(self):
         hero = game_world.hero
         dt = game_framework.frame_time
+        self.summon_cool -= dt
 
-        if not self.used_intro_text and hero.y > 600:
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.frame_num
+
+        if not self.used_intro_text and hero.y > 480:
             self.used_intro_text = True
             dialogue_state.set_message("...인간 따위가 감히 내 앞에 서다니.")
             dialogue_state.set_message("죽고 싶어서 온건가?")
@@ -102,21 +141,70 @@ class Boss:
         if not self.battle_started:
             return
 
-        if self.hp < self.max_hp * 0.5 and not self.used_half_hp_text:
+        if self.hp < 1000 and not self.used_half_hp_text:
             self.used_half_hp_text = True
             self.boss_state = "Text"
             dialogue_state.set_message("인간 치고는 제법이군. 하지만 지금부터는 봐주지 않겠다.")
             game_framework.push_mode(dialogue_state)
             dialogue_state.on_close = self.resume_after_text
-            self.lightning_ready = True
+            self.summon_started = True
+            self.summon_cool = 15
             return
 
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.frame_num
+        # if self.boss_state == 'Death':
+        #     self.frame = min(self.frame + FRAMES_PER_ACTION * dt, 10)
+        #
+        #     if int(self.frame) >= 10 and not self.death_dialogue_done:
+        #         self.death_dialogue_done = True
+        #
+        #         game_world.remove_object(self)
+        #
+        #         dialogue_state.messages.clear()
+        #         dialogue_state.msg_index = 0
+        #         dialogue_state.set_message("네놈이... 감히...")
+        #
+        #         dialogue_state.on_close = self.go_to_clear
+        #
+        #         game_framework.push_mode(dialogue_state)
+        #     return
 
-        if self.lightning_cool > 0:
-            self.lightning_cool -= dt
-        if self.summon_cool > 0:
-            self.summon_cool -= dt
+        if self.boss_state == 'Death':
+            # 죽는 애니메이션 프레임 진행
+            self.frame += FRAMES_PER_ACTION * dt
+
+            # death 스프라이트가 11프레임(0~10)이니까 그 이상 되면 클리어 화면으로
+            if self.frame >= 11:
+                import game_clear_state
+                game_framework.change_mode(game_clear_state)
+            return
+
+        if self.near_by_hero() == 'Attack' and self.boss_state != 'Attack' and self.boss_state != 'Hurt':
+            self.boss_state = 'Attack'
+            self.frame_num = 12
+            self.frame = 0
+            self.vx = 0
+            self.vy = 0
+            return
+
+        if self.near_by_hero() == 'Run' and self.boss_state != 'Run' and self.boss_state != 'Attack' and self.boss_state != 'Hurt':
+            self.boss_state = 'Run'
+            self.frame_num = 8
+            self.vx = 1
+            self.vy = 1
+
+        if self.boss_state == 'Attack' and int(self.frame) >= 11:
+            self.boss_state = 'Run'
+            self.frame = 0
+            self.frame_num = 8
+            self.vx = 1
+            self.vy = 1
+
+        if self.boss_state == 'Hurt' and get_time() - self.wait_time > 0.5:
+            self.boss_state = 'Run'
+            self.frame = 0
+            self.frame_num = 8
+            self.vx = 1
+            self.vy = 1
 
         dx = hero.x - self.x
         dy = hero.y - self.y
@@ -127,26 +215,19 @@ class Boss:
         else:
             self.face_dir = 2 if dy > 0 else 1
 
-        # 스킬 조건
-        if self.lightning_cool <= 0:
-            self.cast_lightning()
-            return
-
         # 고블린 소환
-        if self.summon_cool <= 0:
+        if self.summon_started and self.summon_cool <= 0:
             self.summon_goblins()
-            return
-
-        # 일반 공격
-        if dist < 50:
-            self.state = "Attack"
-            return
 
         # 추격
-        self.state = "Run"
-        speed = 60 * dt
-        self.x += dx / dist * speed
-        self.y += dy / dist * speed
+        if self.boss_state == "Run":
+            dx = hero.x - self.x
+            dy = hero.y - self.y
+
+            if abs(dx) > abs(dy):
+                self.face_dir = 4 if dx > 0 else 3
+            else:
+                self.face_dir = 2 if dy > 0 else 1
 
         self.prev_x = self.x
         self.prev_y = self.y
@@ -154,21 +235,25 @@ class Boss:
         if self.damage_cool > 0:
             self.damage_cool -= game_framework.frame_time
 
+        if self.face_dir == 1:
+            self.y -= self.vy * RUN_SPEED_PPS * game_framework.frame_time
+        elif self.face_dir == 2:
+            self.y += self.vy * RUN_SPEED_PPS * game_framework.frame_time
+        elif self.face_dir == 3:
+            self.x -= self.vx * RUN_SPEED_PPS * game_framework.frame_time
+        elif self.face_dir == 4:
+            self.x += self.vx * RUN_SPEED_PPS * game_framework.frame_time
+
     def resume_after_text(self):
-        self.boss_state = 'Idle'
-
-    def cast_lightning(self):
-        self.boss_state = "Skill"
-        self.lightning_cool = 5
-
-        hero = game_world.hero
-        if not hero.muzuk:
-            hero.get_damage(40)
+        self.boss_state = 'Run'
+        self.frame = 0
+        self.frame_num = 8
+        self.vx = 1
+        self.vy = 1
 
     def summon_goblins(self):
-        self.summon_cool = 8
-
-        for i in range(3):
+        self.summon_cool = 15
+        for i in range(2):
             g = Goblin()
             g.x = self.x + random.randint(-80, 80)
             g.y = self.y + random.randint(-80, 80)
@@ -179,7 +264,7 @@ class Boss:
     def draw(self):
         cam = game_world.camera
         sx, sy = cam.world_to_screen(self.x, self.y)
-        dw, dh = cam.scale_size(60, 60)
+        dw, dh = cam.scale_size(100, 100)
 
         if self.face_dir == 1:
             self.height = 64 * 3
@@ -207,7 +292,7 @@ class Boss:
             elif self.face_dir == 4:  # right
                 self.x = self.prev_x
         if group == 'hero_attack:boss':
-            if self.boss_state == 'Hurt' or self.boss_state == 'Death':
+            if self.boss_state == 'Hurt' or self.boss_state == 'BeforeDeath':
                 return
             if self.damage_cool > 0:
                 return
