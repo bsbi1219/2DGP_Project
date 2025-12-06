@@ -4,7 +4,7 @@ import game_world
 import dialogue_state
 
 class InteractZone:
-    def __init__(self, x, y, width, height, message="상호작용", after_message=None, give_item=None, open_store=False):
+    def __init__(self, x, y, width, height, message="상호작용", after_message=None, give_item=None, open_store=False, condition=None, on_fail=None, on_pass=None):
         self.x = x
         self.y = y
         self.w = width
@@ -13,6 +13,11 @@ class InteractZone:
         self.after_message = after_message
         self.give_item = give_item
         self.open_store = open_store
+
+        self.condition = condition
+        self.on_pass = on_pass
+        self.on_fail = on_fail
+
         self.visited = False
 
     def get_bb(self):
@@ -23,10 +28,30 @@ class InteractZone:
         return left, bottom, right, top
 
     def interact(self):
+        hero = game_world.hero
+
+        if hero.opened_boss_door:
+            dialogue_state.set_message("보스방에 입장한다.")
+            game_framework.push_mode(dialogue_state)
+            return
+
         if self.open_store:
             import ui
             game_framework.push_mode(ui.StoreUI())
             return
+
+        if self.condition is not None and hero.opened_boss_door == False:
+            if self.condition(hero):
+                if self.on_pass:
+                    self.on_pass(hero)
+                dialogue_state.set_message(self.message)
+            else:
+                if self.on_fail:
+                    self.on_fail(hero)
+                dialogue_state.set_message(self.after_message)
+            game_framework.push_mode(dialogue_state)
+            return
+
         if not self.visited:
             dialogue_state.set_message(self.message)
             if self.give_item:
