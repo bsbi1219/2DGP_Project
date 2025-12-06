@@ -131,6 +131,10 @@ def go_to_map(map_id):
         game_world.add_objects(goblins, 1)
         game_world.add_collision_pair('hero_body:boss', hero, boss)
         game_world.add_collision_pair('hero_attack:boss', hero, boss)
+        for g in goblins:
+            game_world.add_collision_pair('boss:wall', g, None)
+            game_world.add_collision_pair("hero_body:goblin", hero, g)
+            game_world.add_collision_pair("hero_attack:goblin", hero, g)
 
     game_world.add_collision_pair('hero_body:wall', hero, None)
     for left, bottom, right, top in map.collision_rects:
