@@ -503,6 +503,14 @@ class Hero:
                 self.y -= overlap_bottom
             elif min_overlap == overlap_top:
                 self.y += overlap_top
+        if group == 'hero_body:boss' and self.state_machine.cur_state != self.HURT:
+            if self.muzuk:
+                return
+            self.state_machine.cur_state.exit(None)
+            self.HURT.enter(None)
+            self.state_machine.cur_state = self.HURT
+            self.get_damage(other.atk)
+            self.vx, self.vy = 0, 0
         if group == 'hero_attack:slime':
             pass
         if group == 'hero_attack:goblin':
