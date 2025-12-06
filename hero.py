@@ -295,6 +295,8 @@ class Hero:
     def respawn_hero(self):
         self.x = 50
         self.y = 850
+        self.vx = 0
+        self.vy = 0
         self.hp = self.max_hp
         self.state_machine.cur_state = self.IDLE
         self.dead = False
