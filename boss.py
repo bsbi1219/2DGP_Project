@@ -259,10 +259,10 @@ class Boss:
             self.height = 0
         Boss.images[self.boss_state].clip_draw(int(self.frame) * 64, self.height, 64, 64, sx, sy, dw, dh)
 
-        hx1, hy1, hx2, hy2 = self.get_bb()
-        hx1, hy1 = cam.world_to_screen(hx1, hy1)
-        hx2, hy2 = cam.world_to_screen(hx2, hy2)
-        draw_rectangle(hx1, hy1, hx2, hy2)
+        # hx1, hy1, hx2, hy2 = self.get_bb()
+        # hx1, hy1 = cam.world_to_screen(hx1, hy1)
+        # hx2, hy2 = cam.world_to_screen(hx2, hy2)
+        # draw_rectangle(hx1, hy1, hx2, hy2)
 
     def handle_collision(self, group, other):
         if group == 'boss:wall':

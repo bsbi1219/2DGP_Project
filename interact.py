@@ -70,11 +70,12 @@ class InteractZone:
 
     def draw(self):
         # 디버그용 (필요할 때만 호출)
-        l, b, r, t = self.get_bb()
-        cam = game_world.camera
-        sx1, sy1 = cam.world_to_screen(l, b)
-        sx2, sy2 = cam.world_to_screen(r, t)
-        draw_rectangle(sx1, sy1, sx2, sy2)
+        # l, b, r, t = self.get_bb()
+        # cam = game_world.camera
+        # sx1, sy1 = cam.world_to_screen(l, b)
+        # sx2, sy2 = cam.world_to_screen(r, t)
+        # draw_rectangle(sx1, sy1, sx2, sy2)
+        pass
 
     def update(self):
         pass

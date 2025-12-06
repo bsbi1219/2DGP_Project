@@ -440,17 +440,17 @@ class Hero:
         cur = self.state_machine.cur_state
         cur.draw(sx, sy)
 
-        hx1, hy1, hx2, hy2 = self.get_bb()
-        hx1, hy1 = cam.world_to_screen(hx1, hy1)
-        hx2, hy2 = cam.world_to_screen(hx2, hy2)
-        draw_rectangle(hx1, hy1, hx2, hy2)
-
-        attack_bb = self.get_attack_bb()
-        if attack_bb:
-            ax1, ay1, ax2, ay2 = attack_bb
-            ax1, ay1 = cam.world_to_screen(ax1, ay1)
-            ax2, ay2 = cam.world_to_screen(ax2, ay2)
-            draw_rectangle(ax1, ay1, ax2, ay2)
+        # hx1, hy1, hx2, hy2 = self.get_bb()
+        # hx1, hy1 = cam.world_to_screen(hx1, hy1)
+        # hx2, hy2 = cam.world_to_screen(hx2, hy2)
+        # draw_rectangle(hx1, hy1, hx2, hy2)
+        #
+        # attack_bb = self.get_attack_bb()
+        # if attack_bb:
+        #     ax1, ay1, ax2, ay2 = attack_bb
+        #     ax1, ay1 = cam.world_to_screen(ax1, ay1)
+        #     ax2, ay2 = cam.world_to_screen(ax2, ay2)
+        #     draw_rectangle(ax1, ay1, ax2, ay2)
 
     def get_bb(self):
         return self.get_body_bb()

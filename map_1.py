@@ -99,11 +99,11 @@ class Map:
         self.draw_map(height_object_spider, self.map_1_object_spider, self.object_spider_image, cam)
         self.draw_map(height_object_wep, self.map_1_object_wep, self.object_web_image, cam)
 
-        for rect in self.collision_rects:
-            l, b, r, t = rect
-            sx1, sy1 = cam.world_to_screen(l, b)
-            sx2, sy2 = cam.world_to_screen(r, t)
-            draw_rectangle(sx1, sy1, sx2, sy2)
+        # for rect in self.collision_rects:
+        #     l, b, r, t = rect
+        #     sx1, sy1 = cam.world_to_screen(l, b)
+        #     sx2, sy2 = cam.world_to_screen(r, t)
+        #     draw_rectangle(sx1, sy1, sx2, sy2)
 
     def update(self):
         pass

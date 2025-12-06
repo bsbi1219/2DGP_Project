@@ -178,10 +178,10 @@ class Goblin:
         hp_text = f"{self.hp}/200"
         Goblin.font.draw(sx - 33, sy + 30, hp_text, (255, 255, 255))
 
-        hx1, hy1, hx2, hy2 = self.get_bb()
-        hx1, hy1 = cam.world_to_screen(hx1, hy1)
-        hx2, hy2 = cam.world_to_screen(hx2, hy2)
-        draw_rectangle(hx1, hy1, hx2, hy2)
+        # hx1, hy1, hx2, hy2 = self.get_bb()
+        # hx1, hy1 = cam.world_to_screen(hx1, hy1)
+        # hx2, hy2 = cam.world_to_screen(hx2, hy2)
+        # draw_rectangle(hx1, hy1, hx2, hy2)
 
     def get_bb(self):
         if self.goblin_state == 'Attack' and 6 >= int(self.frame) >= 3 :

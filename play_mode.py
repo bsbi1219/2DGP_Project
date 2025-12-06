@@ -124,15 +124,16 @@ def go_to_map(map_id):
         game_world.add_object(ui_boss_hp, 3)
         boss = Boss()
         game_world.boss = boss
-        game_world.add_object(boss, 1)
+        game_world.add_object(boss, 2)
         game_world.add_collision_pair('boss:wall', boss, None)
         game_world.add_collision_pair('goblin:wall', None, None)
         goblins = [Goblin() for _ in range(20)]
         game_world.add_objects(goblins, 1)
         game_world.add_collision_pair('hero_body:boss', hero, boss)
         game_world.add_collision_pair('hero_attack:boss', hero, boss)
+        game_world.add_collision_pair('goblin:wall', None, None)
         for g in goblins:
-            game_world.add_collision_pair('boss:wall', g, None)
+            game_world.add_collision_pair('goblin:wall', g, None)
             game_world.add_collision_pair("hero_body:goblin", hero, g)
             game_world.add_collision_pair("hero_attack:goblin", hero, g)
 
