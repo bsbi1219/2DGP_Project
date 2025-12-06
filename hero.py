@@ -270,6 +270,10 @@ class Hero:
             self.HURT: {}
         })
 
+    def set_pos(self, x, y):
+        self.x = x
+        self.y = y
+
     def open_boss_door(self):
         if self.item_boss_key:
             self.opened_boss_door = True
@@ -299,8 +303,9 @@ class Hero:
             print("HERO DEAD")
 
     def respawn_hero(self):
-        self.x = 50
-        self.y = 850
+        import play_mode
+        play_mode.go_to_map(1)
+        self.set_pos(50, 850)
         self.vx = 0
         self.vy = 0
         self.hp = self.max_hp
