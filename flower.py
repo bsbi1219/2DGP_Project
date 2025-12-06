@@ -160,15 +160,15 @@ class Flower:
         draw_rectangle(hx1, hy1, hx2, hy2)
 
     def get_bb(self):
-        if self.flower_state == 'Attack':
+        if self.flower_state == 'Attack' and int(self.frame) >= 5:
             if self.face_dir == 1:
                 return self.x - 13, self.y - 15, self.x + 13, self.y + 10
             elif self.face_dir == 2:
                 return self.x - 13, self.y - 10, self.x + 13, self.y + 16
             elif self.face_dir == 3:
-                return self.x - 19, self.y - 10, self.x + 17, self.y + 14
+                return self.x - 21, self.y - 10, self.x + 16, self.y + 14
             elif self.face_dir == 4:
-                return self.x - 17, self.y - 10, self.x + 19, self.y + 14
+                return self.x - 16, self.y - 10, self.x + 21, self.y + 14
         return self.x - 6, self.y - 12, self.x + 6, self.y - 5
 
     def handle_event(self, event):

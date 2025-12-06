@@ -180,7 +180,7 @@ class Slime:
         draw_rectangle(hx1, hy1, hx2, hy2)
 
     def get_bb(self):
-        if self.slime_state == 'Attack':
+        if self.slime_state == 'Attack' and int(self.frame) >= 5:
             return self.x - 17, self.y - 6, self.x + 17, self.y + 15
         return self.x - 6, self.y - 4, self.x + 6, self.y + 4
 

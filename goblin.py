@@ -184,7 +184,7 @@ class Goblin:
         draw_rectangle(hx1, hy1, hx2, hy2)
 
     def get_bb(self):
-        if self.goblin_state == 'Attack':
+        if self.goblin_state == 'Attack' and 6 >= int(self.frame) >= 3 :
             if self.face_dir == 1:
                 return self.x - 19, self.y - 18, self.x + 19, self.y + 5
             if self.face_dir == 2:
