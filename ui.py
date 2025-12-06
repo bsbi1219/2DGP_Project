@@ -2,6 +2,8 @@ from pico2d import *
 import game_framework
 import game_world
 
+store_ui = None
+
 def draw_outline_text(font, x, y, text, color, outline_color, thickness=2):
     for dx in (-thickness, 0, thickness):
         for dy in (-thickness, 0, thickness):
@@ -42,8 +44,9 @@ class StateUI:
         exp_bar_width = int(1280 * exp_ratio)
         self.exp_image.clip_draw(0, 0, exp_bar_width, 14, exp_bar_width / 2, 0, exp_bar_width, 20)
 
-        draw_outline_text(self.small_font, 390, 105, f'ATK +{hero.atk}', (255, 255, 255), (0, 0, 0))
-        draw_outline_text(self.small_font, 390, 85, f'DEF +{hero.defense}', (255, 255, 255), (0, 0, 0))
+        draw_outline_text(self.small_font, 350, 125, f'HP {hero.hp}/{hero.max_hp}', (255, 255, 255), (0, 0, 0))
+        draw_outline_text(self.small_font, 350, 105, f'ATK +{hero.atk}', (255, 255, 255), (0, 0, 0))
+        draw_outline_text(self.small_font, 350, 85, f'DEF +{hero.defense}', (255, 255, 255), (0, 0, 0))
 
         draw_outline_text(self.font, 160, 90, f'Level: {hero.level}', (255, 255, 255), (0, 0, 0))
         draw_outline_text(self.font, 70, 930, f'{hero.gold}G', (255, 255, 255), (0, 0, 0))
@@ -61,15 +64,73 @@ class StateUI:
     def handle_event(self, event):
         pass
 
-class InventoryUI:
+class StoreUI:
     def __init__(self):
+        global store_ui
+        store_ui = load_image('Assets/UI/store_ui.png')
+
+    def init(self):
         pass
 
     def draw(self):
-        pass
+        game_world.render()
+        store_ui.draw(640, 480)
+        update_canvas()
 
     def update(self):
         pass
 
+    def handle_events(self):
+        events = get_events()
+        for e in events:
+            self.handle_event(e)
+
     def handle_event(self, event):
+        if event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
+            mx, my = event.x, event.y
+            my = get_canvas_height() - my
+            hero = game_world.hero
+            if 810 < mx < 873 and 705 < my < 770:
+                game_framework.pop_mode()
+                return
+            if 417 < mx < 863 and 563 < my < 653:
+                if hero.gold < 30:
+                    print("돈 부족!")
+                    return
+                hero.gold -= 30
+                hero.get_potion()
+                return
+            if 417 < mx < 863 and 455 < my < 545:
+                if hero.gold < 70:
+                    print("돈 부족!")
+                    return
+                hero.gold -= 70
+                hero.get_hp(10)
+                return
+            if 417 < mx < 863 and 347 < my < 437:
+                if hero.gold < 80:
+                    print("돈 부족!")
+                    return
+                hero.gold -= 80
+                hero.get_atk(5)
+                hero.get_def(5)
+                return
+            if 417 < mx < 863 and 232 < my < 322:
+                if hero.gold < 250:
+                    print("돈 부족!")
+                    return
+                hero.gold -= 250
+                hero.get_exp(hero.next_exp)
+                return
+
+    def get_bb(self):
+        pass
+
+    def pause(self):
+        pass
+
+    def resume(self):
+        pass
+
+    def finish(self):
         pass
