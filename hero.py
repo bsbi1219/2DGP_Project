@@ -242,6 +242,7 @@ class Hero:
 
         self.gold = 0
         self.item_boss_key = False
+        self.opened_boss_door = False
         self.item_potion_count = 0
 
         self.dead = False
@@ -268,6 +269,11 @@ class Hero:
             self.ATTACK: {},
             self.HURT: {}
         })
+
+    def open_boss_door(self):
+        if self.item_boss_key:
+            self.opened_boss_door = True
+            self.item_boss_key = False
 
     def try_interact(self):
         hl, hb, hr, ht = self.get_bb()
