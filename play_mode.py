@@ -11,6 +11,7 @@ from goblin import Goblin
 from flower import Flower
 from wall import Wall
 from interact import InteractZone
+from sheep import Sheep
 import ui
 
 hero = None
@@ -38,6 +39,9 @@ def init():
     game_world.add_object(hero, 1)
     game_world.hero = hero
 
+    sheep = Sheep()
+    game_world.add_object(sheep, 1)
+
     map = Map()
     game_world.add_object(map, 0)
     game_world.map = map
@@ -46,7 +50,8 @@ def init():
         InteractZone(89, 655, 30, 50, "'보스방 열쇠'를 얻었다!", after_message="이미 얻은 열쇠이다.", give_item=lambda:hero.get_key()),
         InteractZone(1170, 661, 35, 45, "상자를 열었다. 30G를 얻었다!", after_message="상자는 비어있다.", give_item=lambda:hero.get_gold(30)),
         InteractZone(640, 20, 40, 30, "상자를 열었다. 70G를 얻었다!", after_message="상자는 비어있다.", give_item=lambda:hero.get_gold(70)),
-        InteractZone(1164, 845, 40, 40, "수상한 인형을 발견했다... 조금 강해진 기분이다.", after_message="평범한 인형이다.", give_item=lambda:hero.get_atk(10))
+        InteractZone(1164, 845, 40, 40, "수상한 인형을 발견했다... 조금 강해진 기분이다.", after_message="평범한 인형이다.", give_item=lambda:hero.get_atk(10)),
+        InteractZone(215, 307, 20, 40, "무엇을 사러 왔어?", after_message=None, give_item=None, open_store=True),
     ]
     for iz in game_world.interacts:
         game_world.add_object(iz, 1)
@@ -69,7 +74,6 @@ def init():
     flowers = [Flower() for _ in range(20)]
     game_world.add_objects(flowers, 1)
 
-    # Hero와 충돌 처리
     game_world.add_collision_pair('hero_body:slime', hero, None)
     game_world.add_collision_pair('hero_attack:slime', hero, None)
     for slime in slimes:
@@ -119,4 +123,7 @@ def finish():
     game_world.clear()
 
 def pause(): pass
-def resume(): pass
+def resume():
+    game_world.hero.keys_pressed.clear()
+    game_world.hero.vx = 0
+    game_world.hero.vy = 0
