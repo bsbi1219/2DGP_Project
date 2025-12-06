@@ -43,6 +43,7 @@ def go_to_map(map_id):
         from flower import Flower
         from sheep import Sheep
         from interact import InteractZone
+        from boss import Boss
 
         if isinstance(obj, (Slime, Goblin, Flower, Sheep, InteractZone)):
             game_world.remove_collision_object(obj)
@@ -117,8 +118,22 @@ def go_to_map(map_id):
             game_world.add_collision_pair('hero_body:flower', hero, flower)
             game_world.add_collision_pair('hero_attack:flower', hero, flower)
 
-    game_world.add_collision_pair('hero_body:wall', hero, None)
+    if map_id == 2:
+        boss = Boss()
+        game_world.add_objects(boss, 1)
+        game_world.add_collision_pair('boss:wall', boss, None)
+        game_world.add_collision_pair('goblin:wall', None, None)
+        goblins = [Goblin() for _ in range(20)]
+        game_world.add_objects(goblins, 1)
+        for g in goblins:
+            game_world.add_collision_pair('goblin:wall', g, None)
+        for goblin in goblins:
+            game_world.add_collision_pair('hero_body:goblin', hero, goblin)
+            game_world.add_collision_pair('hero_attack:goblin', hero, goblin)
+        game_world.add_collision_pair('hero_body:boss', hero, boss)
+        game_world.add_collision_pair('hero_attack:boss', hero, boss)
 
+    game_world.add_collision_pair('hero_body:wall', hero, None)
     for left, bottom, right, top in map.collision_rects:
         wall = Wall(left, bottom, right, top)
         game_world.add_object(wall, 0)
@@ -126,6 +141,10 @@ def go_to_map(map_id):
 
         if map_id == 1:
             game_world.add_collision_pair('slime:wall', None, wall)
+            game_world.add_collision_pair('goblin:wall', None, wall)
+
+        if map_id == 2:
+            game_world.add_collision_pair('boss:wall', None, wall)
             game_world.add_collision_pair('goblin:wall', None, wall)
 
     camera = Camera(get_canvas_width(), get_canvas_height(),
