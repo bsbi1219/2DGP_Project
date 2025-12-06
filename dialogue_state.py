@@ -1,6 +1,4 @@
 from pico2d import *
-from OpenGL.GL import glLoadIdentity
-from OpenGL.GLU import gluOrtho2D
 import game_framework
 
 font = None
