@@ -45,8 +45,8 @@ class Boss:
         self.height = 64 * 3
         self.max_hp = 2000
         self.hp = 2000
-        self.atk = 40
-        self.defense = 20
+        self.atk = 70
+        self.defense = 30
         self.boss_state = 'Idle'
         self.frame_num = 4
         self.damage_cool = 0
@@ -150,23 +150,6 @@ class Boss:
             self.summon_started = True
             self.summon_cool = 15
             return
-
-        # if self.boss_state == 'Death':
-        #     self.frame = min(self.frame + FRAMES_PER_ACTION * dt, 10)
-        #
-        #     if int(self.frame) >= 10 and not self.death_dialogue_done:
-        #         self.death_dialogue_done = True
-        #
-        #         game_world.remove_object(self)
-        #
-        #         dialogue_state.messages.clear()
-        #         dialogue_state.msg_index = 0
-        #         dialogue_state.set_message("네놈이... 감히...")
-        #
-        #         dialogue_state.on_close = self.go_to_clear
-        #
-        #         game_framework.push_mode(dialogue_state)
-        #     return
 
         if self.boss_state == 'Death':
             # 죽는 애니메이션 프레임 진행
