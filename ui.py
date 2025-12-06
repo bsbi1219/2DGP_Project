@@ -135,21 +135,59 @@ class StoreUI:
     def finish(self):
         pass
 
-
 class BossHPUI:
     def __init__(self):
         self.hp_back = load_image('Assets/UI/hp_back.png')
         self.hp_front = load_image('Assets/UI/hp_front.png')
         self.font = load_font('Assets/DNFBitBitv2.otf', 20)
 
+        self.x = get_canvas_width() // 2
+        self.y = get_canvas_height() - 60
+
     def draw(self):
         boss = game_world.boss
+        if not boss.battle_started:
+            return
+        if boss.boss_state == 'Death':
+            return
 
-        self.hp_back.draw(640, 480)
-        hp_ratio = boss.hp / boss.max_hp
-        clip_width = int(32 * hp_ratio)
-        draw_width = int(600 * hp_ratio)
-        self.hp_front.clip_draw(0, 0, clip_width, 14, 640, 950, draw_width, 32)
+        hp_ratio = max(0, boss.hp / boss.max_hp)
+
+        # 보스 HP 바 틀 그리기
+        self.hp_back.draw(self.x, self.y)
+
+        # Hero HP바처럼 계산 (여기가 포인트)
+        clip_width = int(32 * hp_ratio)  # 원본 텍스처 32px
+        draw_width = int(600 * hp_ratio)  # 화면에서 600px짜리 길이로 보여주기
+        draw_height = 32  # HP바 높이 그대로
+
+        # Hero 방식과 동일:
+        # HP 바는 "왼쪽 → 오른쪽" 으로 차는 스타일이므로 중심을 이렇게 맞춰야 함
+        draw_x = self.x - (600 // 2) + draw_width / 2
+
+        self.hp_front.clip_draw(
+            0, 0,
+            clip_width, 14,
+            draw_x, self.y,
+            draw_width, draw_height
+        )
+
+        self.font.draw(600, get_canvas_height() - 60, "Vampire", (255, 255, 255))
 
     def update(self):
+        pass
+
+    def handle_event(self, event):
+        pass
+
+    def get_bb(self):
+        pass
+
+    def pause(self):
+        pass
+
+    def resume(self):
+        pass
+
+    def finish(self):
         pass
