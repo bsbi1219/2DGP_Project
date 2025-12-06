@@ -52,6 +52,8 @@ def init():
         InteractZone(640, 20, 40, 30, "상자를 열었다. 70G를 얻었다!", after_message="상자는 비어있다.", give_item=lambda:hero.get_gold(70)),
         InteractZone(1164, 845, 40, 40, "수상한 인형을 발견했다... 조금 강해진 기분이다.", after_message="평범한 인형이다.", give_item=lambda:hero.get_atk(10)),
         InteractZone(215, 307, 20, 40, "무엇을 사러 왔어?", after_message=None, give_item=None, open_store=True),
+        InteractZone(975, 239, 20, 40, "보스방 열쇠를 사용했다.", after_message="열쇠가 필요한 것 같다...", condition=lambda hero: hero.item_boss_key,  on_pass=lambda hero: hero.open_boss_door()),
+        # hero가 보스 방으로 이동하는 함수도 추가
     ]
     for iz in game_world.interacts:
         game_world.add_object(iz, 1)
