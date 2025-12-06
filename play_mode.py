@@ -16,6 +16,7 @@ from sheep import Sheep
 import ui
 
 hero = None
+boss = None
 camera = None
 map = None
 map2 = None
@@ -119,17 +120,15 @@ def go_to_map(map_id):
             game_world.add_collision_pair('hero_attack:flower', hero, flower)
 
     if map_id == 2:
+        ui_boss_hp = ui.BossHPUI()
+        game_world.add_object(ui_boss_hp, 3)
         boss = Boss()
-        game_world.add_objects(boss, 1)
+        game_world.boss = boss
+        game_world.add_object(boss, 1)
         game_world.add_collision_pair('boss:wall', boss, None)
         game_world.add_collision_pair('goblin:wall', None, None)
         goblins = [Goblin() for _ in range(20)]
         game_world.add_objects(goblins, 1)
-        for g in goblins:
-            game_world.add_collision_pair('goblin:wall', g, None)
-        for goblin in goblins:
-            game_world.add_collision_pair('hero_body:goblin', hero, goblin)
-            game_world.add_collision_pair('hero_attack:goblin', hero, goblin)
         game_world.add_collision_pair('hero_body:boss', hero, boss)
         game_world.add_collision_pair('hero_attack:boss', hero, boss)
 
