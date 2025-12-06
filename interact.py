@@ -31,6 +31,9 @@ class InteractZone:
         hero = game_world.hero
 
         if hero.opened_boss_door:
+            import play_mode
+            play_mode.go_to_map(2)
+            hero.set_pos(630, 50)
             dialogue_state.set_message("보스방에 입장한다.")
             game_framework.push_mode(dialogue_state)
             return
